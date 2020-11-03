@@ -1,3 +1,3 @@
 # cse110project
 
-Hello world
+`node cli` to run
