@@ -43,7 +43,7 @@ class Server {
                 this.api.use(endpoint.path, ...endpoint.pre);
             }
 
-            this.api[endpoint.method](endpoint.path, endpoint.handler.bind(this.app));
+            this.api[endpoint.method](endpoint.path, endpoint.handler.bind(this));
             this.logger.debug(`Registering route ${endpoint.method.toUpperCase()} at ${endpoint.path}`);
         });
 
