@@ -11,6 +11,25 @@ const DefaultConfig = {
     port: 3000
 };
 
+/** @param {string} dir */
+const walk = dir => {
+    /** @type {string[]} */
+    let results = [];
+    const list = fs.readdirSync(dir);
+    list.forEach(file => {
+        file = path.join(dir, file);
+        const stat = fs.statSync(file);
+        if (stat && stat.isDirectory()) { 
+            /* Recurse into a subdirectory */
+            results = results.concat(walk(file));
+        } else { 
+            /* Is a file */
+            results.push(file);
+        }
+    });
+    return results;
+}
+
 class Server {
 
     /** @param {typeof DefaultConfig} config */
@@ -33,11 +52,11 @@ class Server {
             .use(body.urlencoded({ extended: true }));
 
         // Register endpoints
-        fs.readdirSync(path.resolve(__dirname, "routers")).forEach(file => {
+        walk(path.resolve(__dirname, "routers")).forEach(file => {
             /** @type {APIEndpointHandler} */
-            const endpoint = require(path.resolve(__dirname, "routers", file));
+            const endpoint = require(file);
             if (!endpoint.handler || !endpoint.method || !endpoint.path)
-                return void this.logger.warn(`Ignoring endpoint file ${file}: module export not properly defined`);
+                return void this.logger.warn(`Ignoring endpoint file at "${file}": module export not properly defined`);
 
             if (endpoint.pre && Array.isArray(endpoint.pre)) {
                 this.api.use(endpoint.path, ...endpoint.pre);
