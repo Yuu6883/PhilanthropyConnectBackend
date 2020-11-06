@@ -38,6 +38,8 @@ class Server {
         this.logger = new Logger();
 
         this.loadAPIRouter();
+        
+        this.DB = {};
 
         this.app = express()
             .disable("x-powered-by")
