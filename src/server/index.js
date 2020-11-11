@@ -1,6 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
+// Bruh.
+/** @type {import("../../node_modules/firebase-admin/lib/index")} */
+const admin = require("firebase-admin");
 const express = require("express");
 const nocache = require("nocache");
 const body = require("body-parser");
@@ -8,7 +11,8 @@ const body = require("body-parser");
 const Logger = require("./modules/logger");
 
 const DefaultConfig = {
-    port: 3000
+    port: 3000,
+    web: true
 };
 
 /** @param {string} dir */
@@ -42,9 +46,22 @@ class Server {
         this.DB = {};
 
         this.app = express()
-            .disable("x-powered-by")
-            .use(express.static(path.resolve(__dirname, "..", "..", "public")))
-            .use("/api", this.api);
+            .disable("x-powered-by");
+        
+        if (config.web) {
+            this.app.use(express.static(path.resolve(__dirname, "..", "..", "public")));
+        }
+        this.app.use("/api", this.api);
+
+        const certFile = path.resolve(__dirname, "..", "..", "cli", "admin-config.json");
+        if (!fs.existsSync(certFile)) {
+            throw new Error("Can NOT find admin-config.json for firebase-admin tool, exiting");
+        } 
+        
+        admin.initializeApp({
+            credential: admin.credential.cert(require(certFile))
+        });
+        this.firestore = admin.firestore();
     }
 
     loadAPIRouter() {
