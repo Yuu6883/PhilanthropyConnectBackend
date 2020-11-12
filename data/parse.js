@@ -10,4 +10,4 @@ lines.forEach(line => {
     out[zip] = [lat, long].map(Number);
 });
 
-fs.writeFileSync("zip.json", JSON.stringify(out));
+fs.writeFileSync("us-zip.json", JSON.stringify(out));
