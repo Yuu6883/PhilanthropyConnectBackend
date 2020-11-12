@@ -6,20 +6,23 @@ describe("Basic Individual Test", async function() {
     const app = await runner();
     
     after(async () => await app.stop());
+    
     let error = null;
 
     it("User form validation", () => {
         const invalid_form = {};
-        error = app.db.inds.schema.validate(invalid_form);
-        assert(!!error, "Expecting error");
+        let res = app.db.inds.schema.validate(invalid_form);
+        assert(!!(res.error || res.errors), "Expecting error");
         
         const valid_form = {
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"]
         };
-        error = app.db.inds.schema.validate(valid_form);
-        assert.ifError(error);
+        res = app.db.inds.schema.validate(valid_form);
+        assert.ifError(res.error || res.errors);
+        
+        // Do stuff with res.value
     });
 
     it("Database tests", async() => {

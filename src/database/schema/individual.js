@@ -1,32 +1,23 @@
-const validate = require("validate.js");
+const Joi = require("joi");
 const ZIP = require("../../modules/us-zip");
 
-validate.validators.stringArray = arrayItems => Array.isArray(arrayItems) ? 
-    (arrayItems.every(s => typeof s == "string") ? null : "Not all items are strings") : "Not Array";
-
-const constraints = {
-    firstname: {
-        type: "string",
-        presence: true,
-        length: {
-            minimum: 1,
-            maximum: 100
-        }
-    },
-    lastname: {
-        type: "string",
-        presence: true,
-        length: {
-            minimum: 1,
-            maximum: 100
-        }
-    },
-    cause: {
-        type: "array",
-        presence: true,
-        stringArray: true
-    }
-}
+const schema = Joi.object({
+    firstname: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(40)
+        .required(),
+    lastname: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(40)
+        .required(),
+    cause: Joi.array().items(
+        Joi.string()
+            .min(2)
+            .max(40)
+    )
+});
 
 class IndividualSchema {
     
@@ -40,9 +31,7 @@ class IndividualSchema {
 
     /** @param {IndividualForm} form */
     static validate(form) {
-        try {
-            return validate(form, constraints);
-        } catch (e) { return e; }
+        return schema.validate(form);
     }
 }
 
