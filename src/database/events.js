@@ -1,36 +1,27 @@
-// TODO: import firebase and stuff...
+class Events {
 
-module.exports = class OrgEvents {
-
-    constructor() {
-        this.id = "";
-        this.title = "";
-        this.zip = 0;
-        /** @type {string[]} */
-        this.skills = [];
-        this.date = 0;
-        throw new Error("Schema Object constructor should not be called. Use prototype instead");
+    /** @param {import("@google-cloud/firestore").CollectionReference} ref */
+    constructor(ref) {
+        this.ref = ref;
     }
 
-    /** 
+    /**
      * Gets an event doc by the event id
      * @param {string}
-     * @returns {OrgEvents}
+     * @returns {}
      */
-    static getByID(id) {
+    getByID(id) {
         // TODO: implement
     }
 
     /** 
      * Gets an events doc by the org id
      * @param {string}
-     * @returns {OrgEvents[]}
+     * @returns {[]}
      */
-    static getByOrgID(id) {
+    getByOrgID(id) {
         // TODO: implement
     }
-
-    static post() {
-        
-    }
 }
+
+module.exports = Events;

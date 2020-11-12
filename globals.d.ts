@@ -18,3 +18,19 @@ interface APIEndpointHandler {
     path: string;
     pre?: Array<import("express").Handler>;
 }
+
+interface IndividualForm {
+    firstname: string;
+    lastname:  string;
+    cause:     string[];
+    zip:       string;
+    skills:    string[];
+    gender:    string;
+}
+
+declare type IndividualDocument = {
+    id:        string;
+    email:     string;
+    ratings:   string[];
+    following: string[];
+} & IndividualForm;

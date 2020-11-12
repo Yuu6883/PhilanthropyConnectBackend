@@ -1,14 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
-// Bruh.
-/** @type {import("../../node_modules/firebase-admin/lib/index")} */
 const admin = require("firebase-admin");
 const express = require("express");
 const nocache = require("nocache");
 const body = require("body-parser");
 
-const Logger = require("./modules/logger");
+const ZIP = require("../modules/us-zip");
+const DB = require("../modules/database");
+const Logger = require("../modules/logger");
 
 const DefaultConfig = {
     port: 3000,
@@ -42,8 +42,6 @@ class Server {
         this.logger = new Logger();
 
         this.loadAPIRouter();
-        
-        this.DB = {};
 
         this.app = express()
             .disable("x-powered-by");
@@ -61,7 +59,9 @@ class Server {
         admin.initializeApp({
             credential: admin.credential.cert(require(certFile))
         });
+        
         this.firestore = admin.firestore();
+        this.db = new DB(this);
     }
 
     loadAPIRouter() {
