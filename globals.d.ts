@@ -19,6 +19,8 @@ interface APIEndpointHandler {
     pre?: Array<import("express").Handler>;
 }
 
+interface ID { id: string; }
+
 interface IndividualForm {
     firstname: string;
     lastname:  string;
@@ -33,4 +35,6 @@ declare type IndividualDocument = {
     email:     string;
     ratings:   string[];
     following: string[];
-} & IndividualForm;
+} & IndividualForm & ID;
+
+// Add more types as you need

@@ -1,42 +1,53 @@
-const IndividualSchema = require("./schema/individual");
+const Template = require("./template");
+const ZIP = require("../modules/us-zip");
+const Joi = require("joi");
 
-module.exports = class Individual {
+const validZIP = ZIP.map.keys();
 
-    /** @param {import("@google-cloud/firestore").CollectionReference} ref */
-    constructor(ref) {
-        this.ref = ref;
-    }
+/** @type {Joi.ObjectSchema<IndividualForm>} */
+const schema = Joi.object({
+    firstname: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(40)
+        .required(),
+    lastname: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(40)
+        .required(),
+    cause: Joi.array().items(
+        Joi.string()
+            .min(2)
+            .max(40)
+    ),
+    zip: Joi.string()
+        .valid(...validZIP)
+        .required()
+        .error(() => new Error("Invalid US zip code"))
+});
 
-    get schema() { return IndividualSchema; }
+/**
+ * @extends {Template<IndividualForm, IndividualDocument>}
+ */
+class Individual extends Template {
 
     /**
-     * Gets a user doc by uid
-     * @param {string} id
+     * Individual schema
+     * @param {import("../server/index")} app
      */
-    getByID(id) {
-        return this.ref.doc(id).get();
+    constructor(app) {
+        super(app, "individuals", schema);
     }
 
-    getAll() {
-        return this.ref.get();
-    }
-
-    /** @param {IndividualDocument} doc */
-    async insert(doc) {
-        const id = doc.id;
-        const dup = await this.getByID(id);
-        if (dup.exists) return false;
-        delete doc.id;
-        return await this.ref.doc(id).set(doc);
-    }
-
-    /**
-     * Deletes a user doc by the uid
-     * (not wanted in production?)
-     * @param {string} id
+    /** 
+     * @param {IndividualForm}
+     * @returns {IndividualDocument}
      */
-    async delete(id) {
-        const doc = await this.ref.doc(id).get();
-        return doc.exists ? (await doc.ref.delete(), true) : false;     
+    create(form) {
+        // TODO: transform the form (add location etc)
+        return form;
     }
 }
+
+module.exports = Individual;

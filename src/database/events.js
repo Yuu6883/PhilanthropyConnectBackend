@@ -1,26 +1,40 @@
-class Events {
+const Template = require("./template");
+const ZIP = require("../modules/us-zip");
+const Joi = require("joi");
 
-    /** @param {import("@google-cloud/firestore").CollectionReference} ref */
-    constructor(ref) {
-        this.ref = ref;
-    }
+const validZIP = ZIP.map.keys();
+
+// TODO: define template types in globals.d.ts and object schema
+/** @type {Joi.ObjectSchema<any>} */
+const schema = Joi.object({
+    zip: Joi.string()
+        .valid(...validZIP)
+        .required()
+        .error(() => new Error("Invalid US zip code"))
+});
+
+/**
+ * TODO: define template types in globals.d.ts
+ * @extends {Template<any, any>}
+ */
+class Events extends Template {
 
     /**
-     * Gets an event doc by the event id
-     * @param {string}
-     * @returns {}
+     * Events schema
+     * @param {import("../server/index")} app
      */
-    getByID(id) {
-        // TODO: implement
+    constructor(app) {
+        super(app, "events", schema);
     }
 
     /** 
-     * Gets an events doc by the org id
-     * @param {string}
-     * @returns {[]}
+     * TODO: define template types in globals.d.ts
+     * @param {}
+     * @returns {}
      */
-    getByOrgID(id) {
-        // TODO: implement
+    create(form) {
+        // TODO: transform the form (add location etc)
+        return form;
     }
 }
 

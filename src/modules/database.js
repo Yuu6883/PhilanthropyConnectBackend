@@ -6,9 +6,9 @@ const Ratings = require("../database/ratings");
 module.exports = class DB {
     /** @param {import("../server/index")} app */
     constructor(app) {
-        this.inds    = new Inds(app.firestore.collection("individuals"));
-        this.orgs    = new Orgs(app.firestore.collection("organizations"));
-        this.events  = new Events(app.firestore.collection("events"));
-        this.ratings = new Ratings(app.firestore.collection("ratings"));
+        this.inds    = new Inds(app);
+        this.orgs    = new Orgs(app);
+        this.events  = new Events(app);
+        this.ratings = new Ratings(app);
     }
 }

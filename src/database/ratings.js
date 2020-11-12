@@ -1,16 +1,35 @@
-module.exports = class Rating {
+const Template = require("./template");
+const Joi = require("joi");
 
-    /** @param {import("@google-cloud/firestore").CollectionReference} ref */
-    constructor(ref) {
-        this.ref = ref;
-    }
+// TODO: define template types in globals.d.ts and object schema
+/** @type {Joi.ObjectSchema<any>} */
+const schema = Joi.object({
+    // :)
+});
+
+/**
+ * TODO: define template types in globals.d.ts
+ * @extends {Template<any, any>}
+ */
+class Organizations extends Template {
 
     /**
-     * Gets an event doc by the event id
-     * @param {string}
+     * Organization schema
+     * @param {import("../server/index")} app
+     */
+    constructor(app) {
+        super(app, "organizations", schema);
+    }
+
+    /** 
+     * TODO: define template types in globals.d.ts
+     * @param {}
      * @returns {}
      */
-    getByID(id) {
-        // TODO: implement
+    create(form) {
+        // TODO: transform the form (add location etc)
+        return form;
     }
 }
+
+module.exports = Organizations;

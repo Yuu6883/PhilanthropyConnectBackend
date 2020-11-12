@@ -1,16 +1,41 @@
-module.exports = class Organization {
+const Template = require("./template");
+const ZIP = require("../modules/us-zip");
+const Joi = require("joi");
 
-    /** @param {import("@google-cloud/firestore").CollectionReference} ref */
-    constructor(ref) {
-        this.ref = ref;
-    }
+const validZIP = ZIP.map.keys();
+
+// TODO: define template types in globals.d.ts and object schema
+/** @type {Joi.ObjectSchema<any>} */
+const schema = Joi.object({
+    zip: Joi.string()
+        .valid(...validZIP)
+        .required()
+        .error(() => new Error("Invalid US zip code"))
+});
+
+/**
+ * TODO: define template types in globals.d.ts
+ * @extends {Template<any, any>}
+ */
+class Organizations extends Template {
 
     /**
-     * Gets an event doc by the event id
-     * @param {string}
+     * Events schema
+     * @param {import("../server/index")} app
+     */
+    constructor(app) {
+        super(app, "organizations", schema);
+    }
+
+    /** 
+     * TODO: define template types in globals.d.ts
+     * @param {}
      * @returns {}
      */
-    getByID(id) {
-        // TODO: implement
+    create(form) {
+        // TODO: transform the form (add location etc)
+        return form;
     }
 }
+
+module.exports = Organizations;
