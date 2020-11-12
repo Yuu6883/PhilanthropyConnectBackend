@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const ZIP = require("../../modules/us-zip");
+const validZIP = ZIP.map.keys();
 
 const schema = Joi.object({
     firstname: Joi.string()
@@ -16,7 +17,11 @@ const schema = Joi.object({
         Joi.string()
             .min(2)
             .max(40)
-    )
+    ),
+    zip: Joi.string()
+        .valid(...validZIP)
+        .required()
+        .error(() => new Error("Invalid US zip code"))
 });
 
 class IndividualSchema {

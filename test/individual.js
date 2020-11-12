@@ -7,17 +7,17 @@ describe("Basic Individual Test", async function() {
     
     after(async () => await app.stop());
     
-    let error = null;
-
     it("User form validation", () => {
         const invalid_form = {};
         let res = app.db.inds.schema.validate(invalid_form);
         assert(!!(res.error || res.errors), "Expecting error");
         
+        // TODO: 
         const valid_form = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"]
+            cause: ["Disaster Response"],
+            zip: "92037"
         };
         res = app.db.inds.schema.validate(valid_form);
         assert.ifError(res.error || res.errors);
@@ -37,7 +37,8 @@ describe("Basic Individual Test", async function() {
         const valid_form = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"]
+            cause: ["Disaster Response"],
+            zip: "92037"
         };
         let doc = app.db.inds.schema.from(valid_form);
         doc.id = testID;

@@ -54,7 +54,7 @@ class Server {
         const certFile = path.resolve(__dirname, "..", "..", "cli", "admin-config.json");
         if (!fs.existsSync(certFile)) {
             throw new Error("Can NOT find admin-config.json for firebase-admin tool, exiting");
-        } 
+        }
         
         admin.initializeApp({
             credential: admin.credential.cert(require(certFile))
