@@ -11,7 +11,7 @@ class Template {
     constructor(app, name, schema) {
         this.app = app;
         /** @type {import("@google-cloud/firestore").CollectionReference<D>} */
-        this.ref = app.firestore.collection(name);
+        this.ref = app.firestore.collection(app.isProd ? name : `dev-${name}`);
         this.schema = schema;
     }
 

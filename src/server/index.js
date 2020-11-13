@@ -41,9 +41,13 @@ class Server {
             credential: admin.credential.cert(require(certFile))
         });
         
+        this.env = process.env["NODE_ENV"];
         this.firestore = admin.firestore();
         this.db = new DB(this);
     }
+
+    get isDev() { return !this.isProd; }
+    get isProd() { return this.env == "production"; }
 
     loadAPIRouter() {
         this.api = express.Router()
