@@ -8,6 +8,7 @@ interface Client {
 
 declare type APIRequest = import("express").Request & {
     user: Client;
+    payload: import("firebase-admin").auth.DecodedIdToken
 };
 
 declare type APIResponse = import("express").Response;

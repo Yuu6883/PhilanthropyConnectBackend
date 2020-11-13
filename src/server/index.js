@@ -6,33 +6,14 @@ const express = require("express");
 const nocache = require("nocache");
 const body = require("body-parser");
 
-const ZIP = require("../modules/us-zip");
 const DB = require("../modules/database");
+const walk = require("../modules/walk-dir");
 const Logger = require("../modules/logger");
 
 const DefaultConfig = {
     port: 3000,
     web: true
 };
-
-/** @param {string} dir */
-const walk = dir => {
-    /** @type {string[]} */
-    let results = [];
-    const list = fs.readdirSync(dir);
-    list.forEach(file => {
-        file = path.join(dir, file);
-        const stat = fs.statSync(file);
-        if (stat && stat.isDirectory()) { 
-            /* Recurse into a subdirectory */
-            results = results.concat(walk(file));
-        } else { 
-            /* Is a file */
-            results.push(file);
-        }
-    });
-    return results;
-}
 
 class Server {
 
@@ -68,7 +49,20 @@ class Server {
         this.api = express.Router()
             .use(nocache())
             .use(body.json())
-            .use(body.urlencoded({ extended: true }));
+            .use(body.urlencoded({ extended: true }))
+            .use((req, res, next) => {
+                /** @type {string} */
+                let token = req.params.token || req.body.token;
+                if (!token) return next();
+
+                admin.auth().verifyIdToken(token).then(decoded => {
+                    req.payload = decoded;
+                    next();
+                }).catch(_ => {
+                    this.logger.warn(`Invalid token received`);
+                    res.sendStatus(403); // Unauthorized
+                });
+            });
 
         // Register endpoints
         walk(path.resolve(__dirname, "routers")).forEach(file => {
