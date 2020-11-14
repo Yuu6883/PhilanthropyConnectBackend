@@ -41,7 +41,7 @@ class Individual extends Template {
     }
 
     /** 
-     * @param {IndividualForm}
+     * @param {IndividualForm} form
      * @returns {IndividualDocument}
      */
     create(form) {
