@@ -1,3 +1,5 @@
+const Joi = require("joi");
+
 /**
  * @template F form that need's to be validated
  * @template D document that this template work with
@@ -23,7 +25,7 @@ class Template {
 
     /** 
      * @param {F} form
-     * @returns document validated
+     * @returns {Joi.ValidationResult} document validated
      */
     validate(form) { return this.schema.validate(form); }
 
@@ -49,7 +51,8 @@ class Template {
             const dup = await this.byID(id);
             if (dup.exists) return false;
             delete doc.id;
-            return (await this.ref.doc(id).set(doc), true);
+            await this.ref.doc(id).set(doc);
+            return true;
         } else {
             return await this.ref.add(doc);
         }
