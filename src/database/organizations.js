@@ -36,6 +36,15 @@ class Organizations extends Template {
         // TODO: transform the form (add location etc)
         return form;
     }
+
+    /**
+     * @param {IndividualDocument} indi 
+     * @param {number} radius 
+     * @return {Promise<FirebaseFirestore.QuerySnapshot<D>>}
+     */
+    getOrgsWithin(indi, radius) {
+        // TODO: write the query
+    }
 }
 
 module.exports = Organizations;

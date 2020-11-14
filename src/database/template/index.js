@@ -42,17 +42,17 @@ class Template {
     /** 
      * Inserts a document
      * @param {D & ID} doc
-     * @returns a boolean if no id is in the document, 
-     * or the document reference created with generated id.
+     * @returns document reference, or null if id is duplicated.
      */
     async insert(doc) {
         const id = doc.id;
         if (id) {
             const dup = await this.byID(id);
-            if (dup.exists) return false;
+            if (dup.exists) return null;
             delete doc.id;
-            await this.ref.doc(id).set(doc);
-            return true;
+            const docRef = this.ref.doc(id);
+            await docRef.set(doc);
+            return docRef;
         } else {
             return await this.ref.add(doc);
         }

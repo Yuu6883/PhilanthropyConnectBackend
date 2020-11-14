@@ -62,9 +62,16 @@ describe("Basic Individual Test", async function() {
             zip: "92037"
         };
 
-        let res = app.db.inds.validate(valid_form);
+        const res = app.db.inds.validate(valid_form);
 
         assert.ifError(res.error || res.errors);
+
+        const doc = app.db.inds.create(res.value);
+        const ref = await app.db.inds.insert(doc);
+        assert(doc.location, "Document should have location");
+
+        deleteRes = await app.db.inds.delete(ref.id);
+        assert(deleteRes, "Document should be deleted");
     });
 
 });

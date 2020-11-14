@@ -1,8 +1,10 @@
 const Template = require("./template");
-const ZIP = require("../modules/us-zip");
+const ZIPCodes = require("../modules/us-zip");
+
+const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
 
-const validZIPCodes = ZIP.map.keys();
+const validZIPCodes = ZIPCodes.map.keys();
 
 /** @type {Joi.ObjectSchema<IndividualForm>} */
 const schema = Joi.object({
@@ -48,8 +50,12 @@ class Individual extends Template {
         // TODO: transform the form (add location etc)
         /** @type {IndividualDocument} */
         const doc = form;
+        
         doc.ratings = [];
         doc.following = [];
+
+        const point = ZIPCodes.map.get(doc.zip);
+        doc.location = new GeoPoint(...point);
 
         return doc;
     }

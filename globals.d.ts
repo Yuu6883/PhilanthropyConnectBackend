@@ -35,6 +35,7 @@ declare type IndividualDocument = {
     email:     string;
     ratings:   string[];
     following: string[];
+    location:  FirebaseFirestore.GeoPoint;
 } & IndividualForm & ID;
 
 declare type OrganizationForm = {
