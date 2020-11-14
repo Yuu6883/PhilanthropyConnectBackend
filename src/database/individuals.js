@@ -2,7 +2,7 @@ const Template = require("./template");
 const ZIP = require("../modules/us-zip");
 const Joi = require("joi");
 
-const validZIP = ZIP.map.keys();
+const validZIPCodes = ZIP.map.keys();
 
 /** @type {Joi.ObjectSchema<IndividualForm>} */
 const schema = Joi.object({
@@ -22,7 +22,7 @@ const schema = Joi.object({
             .max(40)
     ),
     zip: Joi.string()
-        .valid(...validZIP)
+        .valid(...validZIPCodes)
         .required()
         .error(() => new Error("Invalid US zip code"))
 });
@@ -44,9 +44,14 @@ class Individual extends Template {
      * @param {IndividualForm} form
      * @returns {IndividualDocument}
      */
-    create(form) {
+    async create(form) {
         // TODO: transform the form (add location etc)
-        return form;
+        /** @type {IndividualDocument} */
+        const doc = form;
+        doc.ratings = [];
+        doc.following = [];
+
+        return doc;
     }
 }
 
