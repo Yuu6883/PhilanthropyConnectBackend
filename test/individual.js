@@ -54,4 +54,17 @@ describe("Basic Individual Test", async function() {
         assert(deleteRes, "Document should be deleted");
     });
 
+    it("Database mock test", async() => {
+        const valid_form = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "92037"
+        };
+
+        let res = app.db.inds.validate(valid_form);
+
+        assert.ifError(res.error || res.errors);
+    });
+
 });
