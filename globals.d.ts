@@ -20,9 +20,9 @@ interface APIEndpointHandler {
     pre?: Array<import("express").Handler>;
 }
 
-interface ID { id: string; }
+declare type ID = { id: string; }
 
-interface IndividualForm {
+declare type IndividualForm = {
     firstname: string;
     lastname:  string;
     cause:     string[];
@@ -32,10 +32,36 @@ interface IndividualForm {
 }
 
 declare type IndividualDocument = {
-    id:        string;
     email:     string;
     ratings:   string[];
     following: string[];
 } & IndividualForm & ID;
+
+declare type OrganizationForm = {
+    title:   string;
+    // TODO:
+}
+
+declare type OrganizationDocument = {
+    ratings:   string[];
+    followers: string[];
+} & OrganizationForm & ID;
+
+declare type RatingForm = {
+    stars:       number;
+    description: string;
+}
+
+declare type RatingDocument = {
+    owner:  string;
+} & RatingForm;
+
+declare type OrgEventForm = {
+    // TODO:
+}
+
+declare type OrgEventDocument = {
+    owner:   string;
+} & OrgEventForm;
 
 // Add more types as you need
