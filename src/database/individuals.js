@@ -44,7 +44,7 @@ class Individual extends Template {
      * @param {IndividualForm} form
      * @returns {IndividualDocument}
      */
-    async create(form) {
+    create(form) {
         // TODO: transform the form (add location etc)
         /** @type {IndividualDocument} */
         const doc = form;
