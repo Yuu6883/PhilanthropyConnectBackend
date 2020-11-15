@@ -1,21 +1,38 @@
 const Template = require("./template");
-const ZIP = require("../modules/us-zip");
+const ZIPCodes = require("../modules/us-zip");
 const Joi = require("joi");
 
-const validZIP = ZIP.map.keys();
+const validZIPCodes = ZIPCodes.map.keys();
 
 // TODO: define template types in globals.d.ts and object schema
-/** @type {Joi.ObjectSchema<any>} */
+/** @type {Joi.ObjectSchema<OrgEventForm>} */
 const schema = Joi.object({
+    title: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(40)
+        .required(),
+    details: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(200)
+        .required(),
     zip: Joi.string()
-        .valid(...validZIP)
+        .valid(...validZIPCodes)
         .required()
-        .error(() => new Error("Invalid US zip code"))
+        .error(() => new Error("Invalid US zip code")),
+    skills: Joi.array().items(
+        Joi.string()
+            .min(2)
+            .max(40)
+    ),
+    date: Joi.date().timestamp()
+        .required()
 });
 
 /**
  * TODO: define template types in globals.d.ts
- * @extends {Template<any, any>}
+ * @extends {Template<OrgEventForm, OrgEventDocument>}
  */
 class Events extends Template {
 
@@ -29,12 +46,23 @@ class Events extends Template {
 
     /** 
      * TODO: define template types in globals.d.ts
-     * @param {}
-     * @returns {}
+     * @param {OrgEventForm}
+     * @returns {OrgEventDocument}
      */
     create(form) {
         // TODO: transform the form (add location etc)
-        return form;
+        /** @type {OrgEventDocument} */
+        const doc = form;
+
+        doc.owner = "";  // org's ID, name or, ????
+        
+        // TODO set is_current from doc.date
+        doc.is_current = False;
+        
+        const point = ZIPCodes.map.get(doc.zip);
+        doc.location = new GeoPoint(...point);
+
+        return doc;
     }
 }
 

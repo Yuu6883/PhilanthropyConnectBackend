@@ -27,8 +27,8 @@ declare type IndividualForm = {
     lastname:  string;
     cause:     string[];
     zip:       string;
-    skills:    string[];
-    gender:    string;
+    skills:    string[]; // not in schema?
+    gender:    string;   //?? dont we delete this
 }
 
 declare type IndividualDocument = {
@@ -54,15 +54,22 @@ declare type RatingForm = {
 }
 
 declare type RatingDocument = {
-    owner:  string;
+    owner:    string; // what is this? user ID, name, or email??
+    org_name: string;
 } & RatingForm;
 
 declare type OrgEventForm = {
-    // TODO:
+    title:    string;
+    details:  string;
+    zip:      string;
+    skills:   string[];
+    date:     string; // event date? string or something else? 
 }
 
 declare type OrgEventDocument = {
-    owner:   string;
+    owner:      string;  // org's ID, name or, ????
+    is_current: boolean;
+    location:   FirebaseFirestore.GeoPoint;
 } & OrgEventForm;
 
 // Add more types as you need

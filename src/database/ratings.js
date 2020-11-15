@@ -2,34 +2,48 @@ const Template = require("./template");
 const Joi = require("joi");
 
 // TODO: define template types in globals.d.ts and object schema
-/** @type {Joi.ObjectSchema<any>} */
+/** @type {Joi.ObjectSchema<RatingForm>} */
 const schema = Joi.object({
-    // :)
+    stars: Joi.number()
+        .min(1)
+        .max(5)
+        .required(),
+    description: Joi.string()
+        .alphanum()
+        .min(2)
+        .max(200)
+        .required()
 });
 
 /**
  * TODO: define template types in globals.d.ts
- * @extends {Template<any, any>}
+ * @extends {Template<RatingForm, RatingDocument>}
  */
-class Organizations extends Template {
+class Ratings extends Template {
 
     /**
-     * Organization schema
+     * Ratings schema
      * @param {import("../server/index")} app
      */
     constructor(app) {
-        super(app, "organizations", schema);
+        super(app, "ratings", schema);
     }
 
     /** 
      * TODO: define template types in globals.d.ts
-     * @param {}
-     * @returns {}
+     * @param {RatingForm}
+     * @returns {RatingDocument}
      */
     create(form) {
         // TODO: transform the form (add location etc)
+        /** @type {RatingDocument} */
+        const doc = form;
+        
+        doc.owner = "";  // org's ID, name or, ????
+        doc.org_name = "";
+
         return form;
     }
 }
 
-module.exports = Organizations;
+module.exports = Ratings;
