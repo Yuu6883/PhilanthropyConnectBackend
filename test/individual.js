@@ -7,22 +7,157 @@ describe("Basic Individual Test", async function() {
     
     after(async () => await app.stop());
     
+    /**
+     * Testing individual fields within the user form
+     * Expected behavior: 
+     * First and Last: required, alphanumeric
+     * and 2 < length < 40
+     * Cause: can be empty, must be within the supported
+     * valid causes
+     * Zip: Required, must be valid zip code
+     * Skills: can be empty, must be within supported 
+     * valid skills
+     * Age: Must be one of the valid age ranges, required
+     */
     it("User form validation", () => {
         const invalid_form = {};
         let res = app.db.inds.validate(invalid_form);
         assert(!!(res.error || res.errors), "Expecting error");
+
+        const empty_first = {
+            firstname: "",
+            lastname: "Beihl",
+            cause: [],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(empty_first);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const invalid_first = {
+            firstname: "Branson@",
+            lastname: "Beihl",
+            cause: [],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(invalid_first);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const empty_last = {
+            firstname: "Branson@",
+            lastname: "Beihl",
+            cause: [],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(empty_last);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const invalid_last = {
+            firstname: "Branson",
+            lastname: "Beihl@",
+            cause: [],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(invalid_last);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const empty_cause = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: [],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(empty_cause);
+        assert.ifError(res.error || res.errors);
+
+        const invalid_cause = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Invalid Cause"],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(invalid_cause);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const empty_zip = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(empty_zip);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const invalid_zip = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "920371",
+            skills: ["exampleSkill"],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(invalid_zip);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const empty_skills = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "92037",
+            skills: [],
+            age: "20-29"
+        };
+        res = app.db.inds.validate(empty_skills);
+        assert.ifError(res.error || res.errors);
         
-        // TODO: 
+        const empty_age = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: ""
+        };
+        res = app.db.inds.validate(empty_age);
+        assert(!!(res.error || res.errors), "Expecting error");
+
+        const invalid_age = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-295837"
+        };
+        res = app.db.inds.validate(invalid_age);
+        assert(!!(res.error || res.errors), "Expecting error");
+
         const valid_form = {
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"],
-            zip: "92037"
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
         };
         res = app.db.inds.validate(valid_form);
         assert.ifError(res.error || res.errors);
         
         // Do stuff with res.value
+        console.log(res.value);
     });
 
     it("Database tests", async() => {
@@ -38,7 +173,9 @@ describe("Basic Individual Test", async function() {
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"],
-            zip: "92037"
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
         };
         let doc = app.db.inds.create(valid_form);
         doc.id = testID;
@@ -59,7 +196,9 @@ describe("Basic Individual Test", async function() {
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"],
-            zip: "92037"
+            zip: "92037",
+            skills: ["exampleSkill"],
+            age: "20-29"
         };
 
         const res = app.db.inds.validate(valid_form);

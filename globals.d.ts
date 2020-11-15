@@ -28,7 +28,7 @@ declare type IndividualForm = {
     cause:     string[];
     zip:       string;
     skills:    string[];
-    gender:    string;
+    age:    string;
 }
 
 declare type IndividualDocument = {
