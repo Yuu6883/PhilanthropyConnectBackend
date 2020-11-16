@@ -25,10 +25,10 @@ describe("Basic Individual Test", async function() {
         // Do stuff with res.value
     });
 
-    it("Database tests", async() => {
-        const testID = "individual_1234567890";
+    it("Database CRUD tests", async() => {
+        const testID = `indi-test-${Date.now()}`;
 
-        const none = await app.db.inds.byID(testID);
+        let none = await app.db.inds.byID(testID);
         assert(!none.exists, "No document expected");
 
         let deleteRes = await app.db.inds.delete(testID);
@@ -43,35 +43,42 @@ describe("Basic Individual Test", async function() {
         let doc = app.db.inds.create(valid_form);
         doc.id = testID;
 
-        const writeRes = await app.db.inds.insert(doc);
-        assert(writeRes, "Document should be inserted");
+        const ref = await app.db.inds.insert(doc);
+        const snapshot = await ref.get();
+        // Create successful
+        assert(snapshot.exists, "Document should be inserted");
+        assert(snapshot.id == testID, "ID should match test ID");
 
-        const res = await app.db.inds.byID(testID);
-        assert(res.exists, "Document should exist");
-        assert(res.id == testID, "ID should match test ID");
+        // Read document
+        const readDoc = snapshot.data();
+        assert(readDoc.zip == doc.zip, "Document zip should match");
+        const oldLocation = readDoc.location;
 
-        deleteRes = await app.db.inds.delete(testID);
-        assert(deleteRes, "Document should be deleted");
-    });
-
-    it("Database mock test", async() => {
-        const valid_form = {
+        // Update document
+        const updated_form = {
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"],
-            zip: "92037"
+            zip: "92122"
         };
+        doc = app.db.inds.create(updated_form);
+        const updated = await app.db.inds.update(testID, doc);
+        assert(updated, "Update operation should be successful");
 
-        const res = app.db.inds.validate(valid_form);
+        const readUpdatedDoc = (await app.db.inds.byID(testID)).data();
+        const newLocation = readUpdatedDoc.location;
+        assert(!newLocation.isEqual(oldLocation), "Location should be updated");
 
-        assert.ifError(res.error || res.errors);
-
-        const doc = app.db.inds.create(res.value);
-        const ref = await app.db.inds.insert(doc);
-        assert(doc.location, "Document should have location");
-
-        deleteRes = await app.db.inds.delete(ref.id);
+        // Delete document
+        deleteRes = await app.db.inds.delete(testID);
         assert(deleteRes, "Document should be deleted");
+
+        none = await app.db.inds.byID(testID);
+        assert(!none.exists, "No document expected");
+    });
+
+    it("Endpoint test", async() => {
+        // TODO:
     });
 
 });
