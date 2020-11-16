@@ -47,12 +47,12 @@ class Individual extends Template {
      * @returns {IndividualDocument}
      */
     create(form) {
-        // TODO: transform the form (add location etc)
         /** @type {IndividualDocument} */
         const doc = form;
         
-        doc.ratings = [];
-        doc.following = [];
+        // Default to empty array
+        doc.ratings = doc.ratings || [];
+        doc.following = doc.following || [];
 
         const point = ZIPCodes.map.get(doc.zip);
         doc.location = new GeoPoint(...point);
