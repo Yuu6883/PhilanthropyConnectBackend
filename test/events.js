@@ -24,7 +24,7 @@ describe("Basic Events Test", async function() {
         assert.ifError(res.error || res.errors);
     });
 
-    it("Database CRUD tests", async() => {
+    it("Database Events CRUD tests", async() => {
 
         const testOrgID = `test-org-${Date.now()}`;
 
@@ -73,7 +73,7 @@ describe("Basic Events Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Endpoint test", async() => {
+    it("Endpoint Events test", async() => {
         // TODO:
     });
 
