@@ -19,7 +19,7 @@ describe("Basic Individual Test", async function() {
      * valid skills
      * Age: Must be one of the valid age ranges, required
      */
-    it("User form validation", () => {
+    it("Individual User form validation", () => {
         const invalid_form = {};
         let res = app.db.inds.validate(invalid_form);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -159,7 +159,7 @@ describe("Basic Individual Test", async function() {
         // Do stuff with res.value
     });
 
-    it("Database CRUD tests", async() => {
+    it("Individual Database CRUD tests", async() => {
         const testID = `indi-test-${Date.now()}`;
 
         let none = await app.db.inds.byID(testID);
@@ -215,7 +215,7 @@ describe("Basic Individual Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Endpoint test", async() => {
+    it("Individual Endpoint test", async() => {
         // TODO:
     });
 

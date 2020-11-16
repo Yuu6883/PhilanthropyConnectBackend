@@ -40,7 +40,12 @@ declare type IndividualDocument = {
 
 declare type OrganizationForm = {
     title:   string;
-    // TODO:
+    mission: string;
+    cause:   string[];
+    zip:     string;
+    org_contact: string;
+    org_url: string;
+    events: string[];
 }
 
 declare type OrganizationDocument = {
