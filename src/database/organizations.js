@@ -1,11 +1,10 @@
 const Template = require("./template");
 const ZIP = require("../modules/us-zip");
 const Joi = require("joi");
+const { validCauses } = require("../constants");
 
 const validZIP = ZIP.map.keys();
-const validCauses = ["exampleCause", "Disaster Response"];
 
-// TODO: define template types in globals.d.ts and object schema
 /** @type {Joi.ObjectSchema<any>} */
 const schema = Joi.object({
     title: Joi.string()
@@ -30,7 +29,6 @@ const schema = Joi.object({
 });
 
 /**
- * TODO: define template types in globals.d.ts
  * @extends {Template<any, any>}
  */
 class Organizations extends Template {
@@ -44,7 +42,6 @@ class Organizations extends Template {
     }
 
     /** 
-     * TODO: define template types in globals.d.ts
      * @param {}
      * @returns {}
      */
