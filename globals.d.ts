@@ -60,7 +60,6 @@ declare type RatingForm = {
 
 declare type RatingDocument = {
     owner:    string; // individuals's ID
-    org_name: string;
 } & RatingForm;
 
 declare type OrgEventForm = {

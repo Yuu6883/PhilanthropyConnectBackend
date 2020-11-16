@@ -35,7 +35,6 @@ class Ratings extends Template {
         const doc = form;
         
         doc.owner = "";  // individual's ID
-        doc.org_name = "";
 
         return form;
     }
