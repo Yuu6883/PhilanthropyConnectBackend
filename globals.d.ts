@@ -43,8 +43,8 @@ declare type OrganizationForm = {
     mission: string;
     cause:   string[];
     zip:     string;
-    org_contact: string;
-    org_url: string;
+    contact: string;
+    url: string;
     events: string[];
 }
 

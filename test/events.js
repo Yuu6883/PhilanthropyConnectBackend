@@ -36,7 +36,7 @@ describe("Basic Events Test", async function() {
             date: Date.now()
         };
 
-        let doc = app.db.events.create(valid_form);
+        let doc = app.db.events.formToDocument(valid_form);
         doc.owner = testOrgID;
 
         const ref = await app.db.events.insert(doc);
@@ -57,7 +57,7 @@ describe("Basic Events Test", async function() {
             skills: ["Painting", "Construction"],
             date: Date.now()
         };
-        doc = app.db.events.create(updated_form);
+        doc = app.db.events.formToDocument(updated_form);
         const updated = await app.db.events.update(snapshot.id, doc);
         assert(updated, "Update operation should be successful");
 

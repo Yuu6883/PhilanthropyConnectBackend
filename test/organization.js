@@ -17,8 +17,8 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92037",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "yuh.org",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
             events: ["Sample event"]
         };
         res = app.db.orgs.validate(empty_title);
@@ -29,8 +29,8 @@ describe("Basic Organization Test", async function() {
             mission: "",
             cause: [],
             zip: "92037",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "yuh.org",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
             events: ["Sample event"]
         };
         res = app.db.orgs.validate(empty_mission);
@@ -41,8 +41,8 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92037",
-            org_contact: "",
-            org_url: "yuh.org",
+            contact: "",
+            url: "yuh.org",
             events: ["Sample event"]
         };
         res = app.db.orgs.validate(empty_contact);
@@ -53,8 +53,8 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92037",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "",
+            contact: "testemail@brokenprogrammers.org",
+            url: "",
             events: ["Sample event"]
         };
         res = app.db.orgs.validate(empty_url);
@@ -65,8 +65,8 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92037",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "yuh.org",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
             events: []
         };
         res = app.db.orgs.validate(validForm);
@@ -88,11 +88,11 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92037",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "yuh.org",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
             events: []
         };
-        let doc = app.db.orgs.create(valid_form);
+        let doc = app.db.orgs.formToDocument(valid_form);
         doc.id = testID;
 
         const ref = await app.db.orgs.insert(doc);
@@ -112,11 +112,11 @@ describe("Basic Organization Test", async function() {
             mission: "Fixing broken programmers",
             cause: [],
             zip: "92122",
-            org_contact: "testemail@brokenprogrammers.org",
-            org_url: "yuh.org",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
             events: ["new event"]
         };
-        doc = app.db.orgs.create(updated_form);
+        doc = app.db.orgs.formToDocument(updated_form);
         const updated = await app.db.orgs.update(testID, doc);
         assert(updated, "Update operation should be successful");
 

@@ -21,7 +21,7 @@ class Template {
      * @param {F} form
      * @returns {D} document parsed/transformed 
      */
-    create(form) { throw new Error("Form transformation not implemented.") }
+    formToDocument(form) { throw new Error("Form transformation not implemented.") }
 
     /** 
      * @param {F} form

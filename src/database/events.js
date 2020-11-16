@@ -45,7 +45,7 @@ class Events extends Template {
      * @param {OrgEventForm}
      * @returns {OrgEventDocument}
      */
-    create(form) {
+    formToDocument(form) {
         /** @type {OrgEventDocument} */
         const doc = form;
 

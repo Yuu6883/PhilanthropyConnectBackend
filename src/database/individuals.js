@@ -58,7 +58,7 @@ class Individual extends Template {
      * @param {IndividualForm} form
      * @returns {IndividualDocument}
      */
-    create(form) {
+    formToDocument(form) {
         // Tasks left: populate email field of form from somewhere
         /** @type {IndividualDocument} */
         const doc = form;

@@ -11,7 +11,7 @@ module.exports = {
             if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
 
             // TODO: Create an individual record
-            //const validatedDocument = this.db.inds.create(validatedForm);
+            //const validatedDocument = this.db.inds.formToDocument(validatedForm);
             //await this.db.inds.insert(validatedForm);
             //return res.sendStatus(200);
 
@@ -21,7 +21,7 @@ module.exports = {
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
 
         // TODO: Create an organization record
-        // const validatedDocument = this.db.orgs.create(validatedForm);
+        // const validatedDocument = this.db.orgs.formToDocument(validatedForm);
         // await this.db.orgs.insert(validatedForm);
         // return res.sendStatus(200);
 

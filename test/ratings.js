@@ -29,7 +29,7 @@ describe("Basic Ratings Test", async function() {
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
         
-        let doc = app.db.ratings.create(valid_form);
+        let doc = app.db.ratings.formToDocument(valid_form);
         doc.owner = testIndID;
 
         const ref = await app.db.ratings.insert(doc);
@@ -47,7 +47,7 @@ describe("Basic Ratings Test", async function() {
             stars: 5,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
-        doc = app.db.ratings.create(updated_form);
+        doc = app.db.ratings.formToDocument(updated_form);
         const updated = await app.db.ratings.update(snapshot.id, doc);
         assert(updated, "Update operation should be successful");
 

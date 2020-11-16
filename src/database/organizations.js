@@ -5,8 +5,7 @@ const Joi = require("joi");
 const validZIP = ZIP.map.keys();
 const validCauses = ["exampleCause", "Disaster Response"];
 
-// TODO: define template types in globals.d.ts and object schema
-/** @type {Joi.ObjectSchema<any>} */
+/** @type {Joi.ObjectSchema<OrganizationForm>} */
 const schema = Joi.object({
     title: Joi.string()
         .required(),
@@ -20,9 +19,9 @@ const schema = Joi.object({
         .valid(...validZIP)
         .required()
         .error(() => new Error("Invalid US zip code")),
-    org_contact: Joi.string()
+    contact: Joi.string()
         .required(),
-    org_url: Joi.string()
+    url: Joi.string()
         .required(),
     events: Joi.array().items(
         Joi.string()
@@ -30,8 +29,7 @@ const schema = Joi.object({
 });
 
 /**
- * TODO: define template types in globals.d.ts
- * @extends {Template<any, any>}
+ * @extends {Template<OrganizationForm, OrganizationDocument>}
  */
 class Organizations extends Template {
 
@@ -44,11 +42,10 @@ class Organizations extends Template {
     }
 
     /** 
-     * TODO: define template types in globals.d.ts
-     * @param {}
-     * @returns {}
+     * @param {OrganizationForm}
+     * @returns {OrganizationDocument}
      */
-    create(form) {
+    formToDocument(form) {
         
         /** @type {OrganizationDocument} */
         const doc = form;

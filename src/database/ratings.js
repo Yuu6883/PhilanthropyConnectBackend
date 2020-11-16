@@ -1,7 +1,6 @@
 const Template = require("./template");
 const Joi = require("joi");
 
-// TODO: define template types in globals.d.ts and object schema
 /** @type {Joi.ObjectSchema<RatingForm>} */
 const schema = Joi.object({
     stars: Joi.number()
@@ -15,7 +14,6 @@ const schema = Joi.object({
 });
 
 /**
- * TODO: define template types in globals.d.ts
  * @extends {Template<RatingForm, RatingDocument>}
  */
 class Ratings extends Template {
@@ -29,12 +27,10 @@ class Ratings extends Template {
     }
 
     /** 
-     * TODO: define template types in globals.d.ts
      * @param {RatingForm}
      * @returns {RatingDocument}
      */
-    create(form) {
-        // TODO: transform the form (add location etc)
+    formToDocument(form) {
         /** @type {RatingDocument} */
         const doc = form;
         

@@ -176,7 +176,7 @@ describe("Basic Individual Test", async function() {
             skills: ["exampleSkill"],
             age: "20-29"
         };
-        let doc = app.db.inds.create(valid_form);
+        let doc = app.db.inds.formToDocument(valid_form);
         doc.id = testID;
 
         const ref = await app.db.inds.insert(doc);
@@ -199,7 +199,7 @@ describe("Basic Individual Test", async function() {
             skills: ["exampleSkill"],
             age: "20-29"
         };
-        doc = app.db.inds.create(updated_form);
+        doc = app.db.inds.formToDocument(updated_form);
         const updated = await app.db.inds.update(testID, doc);
         assert(updated, "Update operation should be successful");
 
