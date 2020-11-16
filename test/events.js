@@ -2,7 +2,7 @@ const assert = require("assert");
 const runner = require("./setup/runner");
 
 describe("Basic Events Test", async function() {
-
+    
     const app = await runner();
     
     after(async () => await app.stop());
@@ -24,7 +24,7 @@ describe("Basic Events Test", async function() {
         assert.ifError(res.error || res.errors);
     });
 
-    it("Database Create & Delete tests", async() => {
+    it("Database CRUD tests", async() => {
 
         const testOrgID = `test-org-${Date.now()}`;
 
@@ -37,21 +37,44 @@ describe("Basic Events Test", async function() {
         };
 
         let doc = app.db.events.create(valid_form);
-
         doc.owner = testOrgID;
+
         const ref = await app.db.events.insert(doc);
-        assert((await ref.get()).exists, "Document should be inserted");
+        const snapshot = await ref.get();
+        // Create successful
+        assert(snapshot.exists, "Document should be inserted");
 
-        const deleted = await app.db.events.delete(ref.id);
+        // Read document
+        const readDoc = snapshot.data();
+        assert(readDoc.owner == testOrgID, "Owner should match");
+        const oldSkills = readDoc.skills;
+
+        // Update document
+        const updated_form = {
+            title: "Brush with Kindness",
+            details: "Help volunteer painting homes of those who can't do it themselves.",
+            zip: "92037",
+            skills: ["Painting", "Construction"],
+            date: Date.now()
+        };
+        doc = app.db.events.create(updated_form);
+        const updated = await app.db.events.update(snapshot.id, doc);
+        assert(updated, "Update operation should be successful");
+
+        const readUpdatedDoc = (await app.db.events.byID(snapshot.id)).data();
+        const newSkills = readUpdatedDoc.skills;
+        assert(oldSkills.length !== newSkills.length, "Skills should be updated");
+
+        // Delete document
+        const deleted = await app.db.events.delete(snapshot.id);
         assert(deleted, "Document should be deleted");
+
+        const none = await app.db.events.byID(snapshot.id);
+        assert(!none.exists, "No document expected");
     });
 
-    it("Database Read test", async() => {
-        // TODO
-    });
-
-    it("Database Update test", async() => {
-        // TODO: maybe just have front end send everything/post form again, instead of only sending the changed fields in the object
+    it("Endpoint test", async() => {
+        // TODO:
     });
 
 });

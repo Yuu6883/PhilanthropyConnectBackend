@@ -5,7 +5,6 @@ const Joi = require("joi");
 
 const validZIPCodes = ZIPCodes.map.keys();
 
-// TODO: define template types in globals.d.ts and object schema
 /** @type {Joi.ObjectSchema<OrgEventForm>} */
 const schema = Joi.object({
     title: Joi.string()
@@ -30,7 +29,6 @@ const schema = Joi.object({
 });
 
 /**
- * TODO: define template types in globals.d.ts
  * @extends {Template<OrgEventForm, OrgEventDocument>}
  */
 class Events extends Template {
@@ -44,12 +42,10 @@ class Events extends Template {
     }
 
     /** 
-     * TODO: define template types in globals.d.ts
      * @param {OrgEventForm}
      * @returns {OrgEventDocument}
      */
     create(form) {
-        // TODO: transform the form (add location etc)
         /** @type {OrgEventDocument} */
         const doc = form;
 

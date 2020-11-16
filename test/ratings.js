@@ -14,8 +14,4 @@ describe("Basic Ratings Test", async function() {
     it("Database tests", async() => {
         
     });
-
-    it("Database mock test", async() => {
-    });
-
 });
