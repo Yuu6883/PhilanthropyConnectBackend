@@ -9,7 +9,6 @@ const schema = Joi.object({
         .max(5)
         .required(),
     description: Joi.string()
-        .alphanum()
         .min(2)
         .max(200)
         .required()
@@ -39,7 +38,7 @@ class Ratings extends Template {
         /** @type {RatingDocument} */
         const doc = form;
         
-        doc.owner = "";  // org's ID, name or, ????
+        doc.owner = "";  // individual's ID
         doc.org_name = "";
 
         return form;

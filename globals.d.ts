@@ -54,7 +54,7 @@ declare type RatingForm = {
 }
 
 declare type RatingDocument = {
-    owner:    string; // what is this? user ID, name, or email??
+    owner:    string; // individuals's ID
     org_name: string;
 } & RatingForm;
 
@@ -63,12 +63,11 @@ declare type OrgEventForm = {
     details:  string;
     zip:      string;
     skills:   string[];
-    date:     string; // event date? string or something else? 
+    date:     string;
 }
 
 declare type OrgEventDocument = {
-    owner:      string;  // org's ID, name or, ????
-    is_current: boolean;
+    owner:      string;  // org's ID
     location:   FirebaseFirestore.GeoPoint;
 } & OrgEventForm;
 

@@ -17,34 +17,41 @@ describe("Basic Events Test", async function() {
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
             skills: ["Painting"],
-            date: "05Nov2020 2:00PST"
+            date: Date.now()
         };
 
         res = app.db.events.validate(valid_form);
         assert.ifError(res.error || res.errors);
-
-        // Do stuff with res.value
     });
 
-    it("Database tests", async() => {
+    it("Database Create & Delete tests", async() => {
+
+        const testOrgID = `test-org-${Date.now()}`;
+
         const valid_form = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
             skills: ["Painting"],
-            date: "05Nov2020 2:00PST"
+            date: Date.now()
         };
 
         let doc = app.db.events.create(valid_form);
 
-        const writeRes = await app.db.events.insert(doc);
-        assert(writeRes, "Document should be inserted");
+        doc.owner = testOrgID;
+        const ref = await app.db.events.insert(doc);
+        assert((await ref.get()).exists, "Document should be inserted");
 
-        //deleteRes = await app.db.inds.delete(testID);
-        //assert(deleteRes, "Document should be deleted");
+        const deleted = await app.db.events.delete(ref.id);
+        assert(deleted, "Document should be deleted");
     });
 
-    it("Database mock test", async() => {
+    it("Database Read test", async() => {
+        // TODO
+    });
+
+    it("Database Update test", async() => {
+        // TODO: maybe just have front end send everything/post form again, instead of only sending the changed fields in the object
     });
 
 });
