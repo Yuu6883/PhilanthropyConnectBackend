@@ -160,7 +160,7 @@ describe("Basic Individual Test", async function() {
         console.log(res.value);
     });
 
-    it("Database tests", async() => {
+    it("Database CRUD tests", async() => {
         const testID = "individual_1234567890";
 
         const none = await app.db.inds.byID(testID);
