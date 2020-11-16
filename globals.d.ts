@@ -27,8 +27,8 @@ declare type IndividualForm = {
     lastname:  string;
     cause:     string[];
     zip:       string;
-    skills:    string[]; // not in schema?
-    gender:    string;   //?? dont we delete this
+    skills:    string[];
+    age:    string;
 }
 
 declare type IndividualDocument = {

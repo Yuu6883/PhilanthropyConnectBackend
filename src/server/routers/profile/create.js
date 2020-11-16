@@ -9,7 +9,21 @@ module.exports = {
         if (type == "individual") {
             const validatedForm = this.db.inds.schema.validate(req.body);
             if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
-            // TODO:
-        }
+
+            // TODO: Create an individual record
+            //const validatedDocument = this.db.inds.create(validatedForm);
+            //await this.db.inds.insert(validatedForm);
+            //return res.sendStatus(200);
+
+        } 
+        // Organization implementation of create goes here
+        const validatedForm = this.db.orgs.schema.validate(req.body);
+        if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+
+        // TODO: Create an organization record
+        // const validatedDocument = this.db.orgs.create(validatedForm);
+        // await this.db.orgs.insert(validatedForm);
+        // return res.sendStatus(200);
+
     }
 }
