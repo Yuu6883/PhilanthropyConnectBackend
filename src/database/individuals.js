@@ -1,14 +1,11 @@
 const Template = require("./template");
 const ZIPCodes = require("../modules/us-zip");
 
-
+const { validCauses, validSkills, ageCats } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
 
 const validZIPCodes = ZIPCodes.map.keys();
-const validCauses = ["exampleCause", "Disaster Response"];
-const validSkills = ["exampleSkill"];
-const ageCats = ["10-19", "20-29", "30-39", "40-49", "50-59", "60-69", "70+"];
 
 /** @type {Joi.ObjectSchema<IndividualForm>} */
 const schema = Joi.object({

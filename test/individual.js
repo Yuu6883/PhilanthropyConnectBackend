@@ -1,5 +1,9 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
+const fetch = require("node-fetch");
+
+const TEST_AUTH_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNlNTQyN2NkMzUxMDhiNDc2NjUyMDhlYTA0YjhjYTZjODZkMDljOTMiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiSm9obiBHZSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS0vQU9oMTRHaGxsZ2hlYmh2ZTV3akF4dm40NGRhWWlONEc5ZTljc1VnVnF6Q0E9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vcGhpbGFudGhyb3B5LWNvbm5lY3QiLCJhdWQiOiJwaGlsYW50aHJvcHktY29ubmVjdCIsImF1dGhfdGltZSI6MTYwNTU5NTA1NywidXNlcl9pZCI6ImpFeUlaaWJUTzJkdEhrRGZucW05WG1tNkptQTIiLCJzdWIiOiJqRXlJWmliVE8yZHRIa0RmbnFtOVhtbTZKbUEyIiwiaWF0IjoxNjA1NTk1MDU3LCJleHAiOjE2MDU1OTg2NTcsImVtYWlsIjoicWdlQHVjc2QuZWR1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTQ0MjAyMDM5OTI3NzQxNDM5ODAiXSwiZW1haWwiOlsicWdlQHVjc2QuZWR1Il19LCJzaWduX2luX3Byb3ZpZGVyIjoiZ29vZ2xlLmNvbSJ9fQ.l9dGS4i7Jy0Efa-0_HfTFYcRHom07QJLUugh8CNc3tsQAfNUDRBEPZf9bkfuuA6zqu-BWeIfKs0HEsYj1lZwZRyWK3psSpRaNofVbXMt63chQMYnJx8cAPIKvTIs4ZbadV3J0oXSYDbIamNixzAseh7F-5JAh4LStyCXAPxZG5TVHClSJPFcDPjG-XrBCGNJu4ihPx8o9b66xutbnuwu_5T3XPK4AHg5CmsS9X4e2Z6C7x6L3qpLIyMVq5OziAAmX4RB4KsuhuGGMiF10H9wlU4hYODqfRIKHtv7s_-t6NB5JX8g2dXYGBTymW5jWlsjcIlj6Tgl86g5O54ey7cpWQ";
+const TEST_AUTH_ID = "jEyIZibTO2dtHkDfnqm9Xmm6JmA2";
 
 describe("Basic Individual Test", async function() {
 
@@ -215,8 +219,37 @@ describe("Basic Individual Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Individual Endpoint test", async() => {
-        // TODO:
+    it("Individual Endpoint CRUD test", async() => {
+
+        // frontend form to create
+        const test_auth_form = {
+            type: "individual", 
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Disaster Response"],
+            zip: "92122",
+            skills: ["exampleSkill"],
+            age: "20-29",
+            token: TEST_AUTH_TOKEN
+        };
+
+        /** @type {Response} */
+        const res = await fetch("http://localhost:3000/api/profile/create", {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(test_auth_form) // body data type must match "Content-Type" header
+        });
+
+        assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
+
+        const data = (await app.db.inds.byID(TEST_AUTH_ID)).data();
+        assert(data.age == test_auth_form.age, "Age should match in the submitted document");
+
+        await app.db.inds.delete(TEST_AUTH_ID);
+
+        // TODO: test other individual endpoints
     });
 
 });

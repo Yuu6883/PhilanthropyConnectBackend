@@ -1,9 +1,9 @@
 const Template = require("./template");
 const ZIP = require("../modules/us-zip");
 const Joi = require("joi");
+const { validCauses } = require("../constants");
 
 const validZIP = ZIP.map.keys();
-const validCauses = ["exampleCause", "Disaster Response"];
 
 /** @type {Joi.ObjectSchema<OrganizationForm>} */
 const schema = Joi.object({

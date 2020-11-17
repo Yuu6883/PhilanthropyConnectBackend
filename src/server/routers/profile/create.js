@@ -2,23 +2,34 @@
 module.exports = {
     method: "post",
     path: "/profile/create",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 2.1
         // TODO: validate user registration form and create either an individual or an organization record
         const type = req.body.type;
+
         if (type == "individual") {
+            delete req.body.type;
+
             const validatedForm = this.db.inds.schema.validate(req.body);
+            if (validatedForm.error || validatedForm.errors) {
+                console.error(validatedForm.error || validatedForm.errors);
+                return res.sendStatus(400);
+            }
+            
+            let doc = this.db.inds.formToDocument(validatedForm.value);
+            
+            doc.id = req.payload.uid;
+            doc.email = req.payload.email;
+
+            await this.db.inds.insert(doc);
+            return res.sendStatus(200);
+
+        } else if (type == "organization") {
+
+            // Organization implementation of create goes here
+            const validatedForm = this.db.orgs.schema.validate(req.body);
             if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
-
-            // TODO: Create an individual record
-            //const validatedDocument = this.db.inds.formToDocument(validatedForm);
-            //await this.db.inds.insert(validatedForm);
-            //return res.sendStatus(200);
-
-        } 
-        // Organization implementation of create goes here
-        const validatedForm = this.db.orgs.schema.validate(req.body);
-        if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+        } else return res.sendStatus(400);
 
         // TODO: Create an organization record
         // const validatedDocument = this.db.orgs.formToDocument(validatedForm);

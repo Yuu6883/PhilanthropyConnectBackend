@@ -57,6 +57,8 @@ class Server {
             .use((req, res, next) => {
                 /** @type {string} */
                 let token = req.params.token || req.body.token;
+                delete req.body.token;
+                
                 if (!token) return next();
 
                 admin.auth().verifyIdToken(token).then(decoded => {
