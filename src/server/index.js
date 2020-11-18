@@ -42,6 +42,7 @@ class Server {
         });
         
         this.env = process.env["NODE_ENV"];
+        this.auth = admin.auth();
         this.firestore = admin.firestore();
         this.db = new DB(this);
     }
@@ -52,22 +53,30 @@ class Server {
     loadAPIRouter() {
         this.api = express.Router()
             .use(nocache())
-            .use(body.json())
-            .use(body.urlencoded({ extended: true }))
-            .use((req, res, next) => {
+            .use(async (req, res, next) => {
                 /** @type {string} */
-                let token = req.params.token || req.body.token;
-                delete req.body.token;
-                
-                if (!token) return next();
+                const token = req.get("Authorization");
 
-                admin.auth().verifyIdToken(token).then(decoded => {
-                    req.payload = decoded;
-                    next();
-                }).catch(_ => {
-                    this.logger.warn(`Invalid token received`);
-                    res.sendStatus(403); // Unauthorized
-                });
+                if (token) {
+                    const args = token.split(" ");
+                    console.log(args);
+                    if (args[0] == "Bearer") {
+                        this.auth.verifyIdToken(args[1]).then(decoded => {
+                            req.payload = decoded;
+                            next();
+                        }).catch(e => {
+                            this.logger.warn(`Invalid token received: ${e.message}`);
+                            res.sendStatus(403); // Unauthorized
+                        });
+                        return;
+                    }
+                }
+                
+                if (this.isDev) {
+                    req.payload = this.testPayload;
+                }
+
+                return next();          
             });
 
         // Register endpoints
@@ -76,6 +85,15 @@ class Server {
             const endpoint = require(file);
             if (!endpoint.handler || !endpoint.method || !endpoint.path)
                 return void this.logger.warn(`Ignoring endpoint file at "${file}": module export not properly defined`);
+
+            if (!endpoint.allowGuest) {
+                this.api.use(endpoint.path, (req, res, next) => {
+                    if (!req.payload) return res.sendStatus(403);
+                    next();
+                });
+            }
+
+            this.api.use(endpoint.path, body.json(), body.urlencoded({ extended: true }));
 
             if (endpoint.pre && Array.isArray(endpoint.pre)) {
                 this.api.use(endpoint.path, ...endpoint.pre);
@@ -95,6 +113,14 @@ class Server {
     // Starts the server
     start() {
         if (this.webServer) return false;
+        
+        if (this.isDev) {
+            this.testPayload = {}; // payload can be set in dev mode
+            this.logger.warn("Application starting in dev mode");
+        } else {
+            this.logger.log("Application starting in prod mode");
+        }
+
         return new Promise((res, rej) => {
             this.webServer = this.app.listen(this.config.port, err => {
                 if (err) return void rej(err);

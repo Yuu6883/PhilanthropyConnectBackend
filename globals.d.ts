@@ -7,17 +7,17 @@ interface Client {
 }
 
 declare type APIRequest = import("express").Request & {
-    user: Client;
     payload: import("firebase-admin").auth.DecodedIdToken
 };
 
 declare type APIResponse = import("express").Response;
 
 interface APIEndpointHandler {
-    handler(this: import("./src/server/index"), req: APIRequest, res: APIResponse): void;
     method: "get" | "post" | "patch" | "put" | "delete" | "head" | "options" | "use";
     path: string;
     pre?: Array<import("express").Handler>;
+    allowGuest?: boolean;
+    handler(this: import("./src/server/index"), req: APIRequest, res: APIResponse): void;
 }
 
 declare type ID = { id: string; }
