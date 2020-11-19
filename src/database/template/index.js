@@ -38,11 +38,8 @@ class Template {
      * @param {string} id
      * @param {D} data
      */
-    async update(id, data) {
-        const doc = await this.byID(id);
-        if (!doc.exists) return false;
-        await doc.ref.update(data);
-        return true;
+    update(id, data) {
+        return this.ref.doc(id).update(data);
     }
 
     /** Returns all the documents */
