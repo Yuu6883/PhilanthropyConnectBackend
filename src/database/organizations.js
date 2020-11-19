@@ -1,6 +1,8 @@
 const Template = require("./template");
 const ZIP = require("../modules/us-zip");
 const Joi = require("joi");
+const firestore = require("@google-cloud/firestore");
+
 const { validCauses } = require("../constants");
 
 const validZIP = ZIP.map.keys();
@@ -54,6 +56,46 @@ class Organizations extends Template {
         doc.ratings = doc.ratings || [];
         doc.followers = doc.followers || [];
         return doc;
+    }
+
+    /**
+     * @param {string} org organization id
+     * @param {string} id rating id
+     */
+    addRating(org, id) {
+        return this.ref.doc(org).update({
+            ratings: firestore.FieldValue.arrayUnion(id)
+        });
+    }
+
+    /**
+     * @param {string} org organization id
+     * @param {string} id rating id
+     */
+    removeRating(org, id) {
+        return this.ref.doc(org).update({
+            ratings: firestore.FieldValue.arrayRemove(id)
+        });
+    }
+
+    /**
+     * @param {string} org organization id
+     * @param {string} id individual id
+     */
+    addFollower(org, id) {
+        return this.ref.doc(org).update({
+            followers: firestore.FieldValue.arrayUnion(id)
+        });
+    }
+
+    /**
+     * @param {string} org organization id
+     * @param {string} id individual id
+     */
+    removeFollower(org, id) {
+        return this.ref.doc(org).update({
+            followers: firestore.FieldValue.arrayRemove(id)
+        });
     }
 
     /**
