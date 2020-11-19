@@ -228,7 +228,6 @@ describe("Basic Individual Test", async function() {
 
         // frontend form to create
         const test_auth_form = {
-            type: "individual", 
             firstname: "Branson",
             lastname: "Beihl",
             cause: ["Disaster Response"],
@@ -238,7 +237,7 @@ describe("Basic Individual Test", async function() {
         };
 
         /** @type {Response} */
-        const res = await fetch("http://localhost:3000/api/profile/create", {
+        const res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_auth_form)

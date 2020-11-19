@@ -5,11 +5,10 @@ module.exports = {
     handler: async function (req, res) {
         // Design use case 2.1
         // TODO: validate user registration form and create either an individual or an organization record
-        const type = req.body.type;
+        const type = req.query.type;
 
         if (type == "individual") {
-            delete req.body.type;
-
+            
             const validatedForm = this.db.inds.schema.validate(req.body);
             if (validatedForm.error || validatedForm.errors) {
                 console.error(validatedForm.error || validatedForm.errors);
