@@ -21,7 +21,8 @@ module.exports = {
         let doc = db.formToDocument(validatedForm.value);
         
         doc.id = req.payload.uid;
-        doc.email = req.payload.email;
+        doc.email = req.payload.email || "";
+        doc.picture = req.payload.picture || "";
 
         await db.insert(doc);
         return res.send({ success: true });
