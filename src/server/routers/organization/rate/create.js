@@ -23,6 +23,8 @@ module.exports = {
             await this.db.orgs.addRating(req.params.id, ref.id);
             res.send({ success: true, id: ref.id });
         } catch (e) {
+            // Remove the rating if we failed to add it to some org document
+            await this.db.ratings.delete(ref.id);
             res.sendStatus(404);
         } 
     }
