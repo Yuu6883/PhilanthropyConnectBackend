@@ -9,11 +9,11 @@ describe("Basic Organization Test", async function() {
     after(async () => await app.stop());
     
     it("Organization form validation", () => {
-        const invalid_form = {};
-        let res = app.db.orgs.validate(invalid_form);
+        const invalidForm = {};
+        let res = app.db.orgs.validate(invalidForm);
         assert(!!(res.error || res.errors), "Form shouldn't work");
 
-        const empty_title = {
+        const emptyTitle = {
             title: "",
             mission: "Fixing broken programmers",
             cause: [],
@@ -22,10 +22,10 @@ describe("Basic Organization Test", async function() {
             url: "yuh.org",
             events: ["Sample event"]
         };
-        res = app.db.orgs.validate(empty_title);
+        res = app.db.orgs.validate(emptyTitle);
         assert(!!(res.error || res.errors), "Expecting error");
 
-        const empty_mission = {
+        const emptyMission = {
             title: "Yuh",
             mission: "",
             cause: [],
@@ -34,10 +34,10 @@ describe("Basic Organization Test", async function() {
             url: "yuh.org",
             events: ["Sample event"]
         };
-        res = app.db.orgs.validate(empty_mission);
+        res = app.db.orgs.validate(emptyMission);
         assert(!!(res.error || res.errors), "Expecting error");
 
-        const empty_contact = {
+        const emptyContact = {
             title: "Yuh",
             mission: "Fixing broken programmers",
             cause: [],
@@ -46,10 +46,10 @@ describe("Basic Organization Test", async function() {
             url: "yuh.org",
             events: ["Sample event"]
         };
-        res = app.db.orgs.validate(empty_contact);
+        res = app.db.orgs.validate(emptyContact);
         assert(!!(res.error || res.errors), "Expecting error");
 
-        const empty_url = {
+        const emptyUrl = {
             title: "Yuh",
             mission: "Fixing broken programmers",
             cause: [],
@@ -58,7 +58,7 @@ describe("Basic Organization Test", async function() {
             url: "",
             events: ["Sample event"]
         };
-        res = app.db.orgs.validate(empty_url);
+        res = app.db.orgs.validate(emptyUrl);
         assert(!!(res.error || res.errors), "Expecting error");
 
         const validForm = {
@@ -86,7 +86,7 @@ describe("Basic Organization Test", async function() {
 
 
 
-        const valid_form = {
+        const validForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
             cause: ["Disaster Response"],
@@ -95,7 +95,7 @@ describe("Basic Organization Test", async function() {
             url: "www.sandiegohabitat.org",
             events: []
         };
-        let doc = app.db.orgs.formToDocument(valid_form);
+        let doc = app.db.orgs.formToDocument(validForm);
         doc.id = testID;
 
         const ref = await app.db.orgs.insert(doc);
@@ -110,7 +110,7 @@ describe("Basic Organization Test", async function() {
         const oldLocation = readDoc.zip;
 
         // Update document
-        const updated_form = {
+        const updatedForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
             cause: ["Disaster Response"],
@@ -119,7 +119,7 @@ describe("Basic Organization Test", async function() {
             url: "www.sandiegohabitat.org",
             events: ["new event"]
         };
-        doc = app.db.orgs.formToDocument(updated_form);
+        doc = app.db.orgs.formToDocument(updatedForm);
         const updated = await app.db.orgs.update(testID, doc);
         assert(updated, "Update operation should be successful");
 
@@ -141,11 +141,11 @@ describe("Basic Organization Test", async function() {
             "name": "Habitat Fpr Humanity",
             "picture": "",
             "email": "example@habitat.org",
-            "email_verified": true
+            "emailVerified": true
         };
 
         // frontend form to create
-        const test_auth_form = {
+        const testAuthForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
             cause: ["Disaster Response"],
@@ -159,18 +159,18 @@ describe("Basic Organization Test", async function() {
         let res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(test_auth_form)
+            body: JSON.stringify(testAuthForm)
         });
 
         assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
 
         const data = (await app.db.orgs.byID(testPayload.uid)).data();
-        assert(data.mission == test_auth_form.mission, "Mission should match in the submitted document");
+        assert(data.mission == testAuthForm.mission, "Mission should match in the submitted document");
 
         res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(test_auth_form)
+            body: JSON.stringify(testAuthForm)
         });
 
         assert(res.status == 400, `Already existing profile should return 400 instead of ${res.status}`);

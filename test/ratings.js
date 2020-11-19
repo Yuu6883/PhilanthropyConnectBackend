@@ -9,28 +9,28 @@ describe("Basic Ratings Test", async function() {
     after(async () => await app.stop());
     
     it("Ratings form validation", () => {
-        const invalid_form = {};
-        let res = app.db.ratings.validate(invalid_form);
+        const invalidForm = {};
+        let res = app.db.ratings.validate(invalidForm);
         assert(!!(res.error || res.errors), "Expecting error");
 
-        const valid_form = {
+        const validForm = {
             stars: 4,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
 
-        res = app.db.ratings.validate(valid_form);
+        res = app.db.ratings.validate(validForm);
         assert.ifError(res.error || res.errors);
     });
 
     it("Database Ratings CRUD tests", async() => {
         const testIndID = `test-ind-${Date.now()}`;
 
-        const valid_form = {
+        const validForm = {
             stars: 4,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
         
-        let doc = app.db.ratings.formToDocument(valid_form);
+        let doc = app.db.ratings.formToDocument(validForm);
         doc.owner = testIndID;
 
         const ref = await app.db.ratings.insert(doc);
@@ -44,11 +44,11 @@ describe("Basic Ratings Test", async function() {
         const oldStars = readDoc.stars;
 
         // Update document
-        const updated_form = {
+        const updatedForm = {
             stars: 5,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
-        doc = app.db.ratings.formToDocument(updated_form);
+        doc = app.db.ratings.formToDocument(updatedForm);
         const updated = await app.db.ratings.update(snapshot.id, doc);
         assert(updated, "Update operation should be successful");
 
@@ -64,7 +64,6 @@ describe("Basic Ratings Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    // TODO
     it("Endpoint Ratings CRUD test", async() => {
         
         // insert org
@@ -97,7 +96,7 @@ describe("Basic Ratings Test", async function() {
         await app.db.inds.insert(indiDoc);
 
         // CREATE TEST
-        const test_rating_form = {
+        const testRatingForm = {
             stars: 4,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
         };
@@ -110,12 +109,12 @@ describe("Basic Ratings Test", async function() {
         let res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/${testOrgID}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(test_rating_form)
+            body: JSON.stringify(testRatingForm)
         });
 
         assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
         const jsonRes = await res.json();
-        assert(jsonRes.success, "Operation should be successful");
+        assert(jsonRes.success && jsonRes.id, "Operation should be successful");
         
         const data = (await app.db.ratings.byID(jsonRes.id)).data();
         assert(data.owner == testIndiID, "Owner of rating and test individual ID should match");
@@ -124,7 +123,7 @@ describe("Basic Ratings Test", async function() {
         res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/nonExistingOrg`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(test_rating_form)
+            body: JSON.stringify(testRatingForm)
         });
         assert(res.status == 404, `Non existing org should return http status 404 instead of ${res.status}`);
 

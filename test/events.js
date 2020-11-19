@@ -9,11 +9,11 @@ describe("Basic Events Test", async function() {
     after(async () => await app.stop());
     
     it("Events form validation", () => {
-        const invalid_form = {};
-        let res = app.db.events.validate(invalid_form);
+        const invalidForm = {};
+        let res = app.db.events.validate(invalidForm);
         assert(!!(res.error || res.errors), "Expecting error");
 
-        const valid_form = {
+        const validForm = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
@@ -21,7 +21,7 @@ describe("Basic Events Test", async function() {
             date: Date.now()
         };
 
-        res = app.db.events.validate(valid_form);
+        res = app.db.events.validate(validForm);
         assert.ifError(res.error || res.errors);
     });
 
@@ -29,7 +29,7 @@ describe("Basic Events Test", async function() {
 
         const testOrgID = `test-org-${Date.now()}`;
 
-        const valid_form = {
+        const validForm = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
@@ -37,7 +37,7 @@ describe("Basic Events Test", async function() {
             date: Date.now()
         };
 
-        let doc = app.db.events.formToDocument(valid_form);
+        let doc = app.db.events.formToDocument(validForm);
         doc.owner = testOrgID;
 
         const ref = await app.db.events.insert(doc);
@@ -51,14 +51,14 @@ describe("Basic Events Test", async function() {
         const oldSkills = readDoc.skills;
 
         // Update document
-        const updated_form = {
+        const updatedForm = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
             skills: ["Painting", "Construction"],
             date: Date.now()
         };
-        doc = app.db.events.formToDocument(updated_form);
+        doc = app.db.events.formToDocument(updatedForm);
         const updated = await app.db.events.update(snapshot.id, doc);
         assert(updated, "Update operation should be successful");
 
@@ -97,7 +97,7 @@ describe("Basic Events Test", async function() {
 
         // CREATE TEST
         // frontend form to create
-        const test_event_form = {
+        const testEventForm = {
             title: "Beach Cleanup",
             details: "Clean up the beach this weekend for Earth Day!",
             zip: "92037",
@@ -113,7 +113,7 @@ describe("Basic Events Test", async function() {
         const res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(test_event_form)
+            body: JSON.stringify(testEventForm)
         });
 
         assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
