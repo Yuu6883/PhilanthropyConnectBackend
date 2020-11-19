@@ -107,7 +107,7 @@ describe("Basic Ratings Test", async function() {
         };
 
         /** @type {Response} */
-        let res = await fetch(`http://localhost:3000/api/organization/rate/${testOrgID}`, {
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/${testOrgID}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_rating_form)
@@ -121,7 +121,7 @@ describe("Basic Ratings Test", async function() {
         assert(data.owner == testIndiID, "Owner of rating and test individual ID should match");
 
         // test catch
-        res = await fetch("http://localhost:3000/api/organization/rate/nonExistingOrg", {
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/nonExistingOrg`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_rating_form)

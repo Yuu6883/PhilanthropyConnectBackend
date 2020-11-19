@@ -237,7 +237,7 @@ describe("Basic Individual Test", async function() {
         };
 
         /** @type {Response} */
-        let res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
+        let res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=individual`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_auth_form)
@@ -249,7 +249,7 @@ describe("Basic Individual Test", async function() {
         assert(data.age == test_auth_form.age, "Age should match in the submitted document");
 
         /** @type {Response} */
-        res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=individual`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_auth_form)

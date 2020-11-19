@@ -110,7 +110,7 @@ describe("Basic Events Test", async function() {
         };
 
         /** @type {Response} */
-        const res = await fetch("http://localhost:3000/api/events/create", {
+        const res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_event_form)
