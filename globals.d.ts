@@ -33,7 +33,7 @@ declare type IndividualForm = {
 
 declare type IndividualDocument = {
     email:     string;
-    ratings:   string[];
+    picture:   string;
     following: string[];
     location:  FirebaseFirestore.GeoPoint;
 } & IndividualForm & ID;
@@ -49,6 +49,8 @@ declare type OrganizationForm = {
 }
 
 declare type OrganizationDocument = {
+    email:     string;
+    picture:   string;
     ratings:   string[];
     followers: string[];
 } & OrganizationForm & ID;
