@@ -2,18 +2,32 @@
 module.exports = {
     method: "put",
     path: "/profile/:id",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 2.2
-        // TODO: Update the profile in the database with the new data from request 
-        const type = req.body.type;
-        if (type == "individual") {
-            const validatedForm = this.db.inds.schema.validate(req.body);
-            if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+        /** @type {"individual"|"organization"} */
+        const type = req.query.type;
 
-        }
-        // Organization implementation of update goes here
-        const validatedForm = this.db.orgs.schema.validate(req.body);
+        // Forbidden to update profile for others
+        if (req.params.id != "@me") return res.sendStatus(403);
+        
+        const db = { "individual": this.db.inds, "organization": this.db.orgs }[type];
+        
+        if (!db) return res.sendStatus(400);
+
+        const validatedForm = db.schema.validate(req.body);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+        
+        let doc = db.formToDocument(validatedForm.value);
+        
+        doc.email = req.payload.email || "";
+        doc.picture = req.payload.picture || "";
 
+        try {
+            await db.update(req.payload.uid, doc);
+            return res.send({ success: true });
+        } catch (e) {
+            // Forbidden to update other type of profile (uid doesn't exist)
+            return res.sendStatus(403);
+        }
     }
 }
