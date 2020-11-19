@@ -60,14 +60,20 @@ class Individual extends Template {
         /** @type {IndividualDocument} */
         const doc = form;
         
-        // Default to empty array
-        doc.ratings = doc.ratings || [];
+        // Defaults
+        doc.email = "";
+        doc.picture = "";
         doc.following = doc.following || [];
 
         const point = ZIPCodes.map.get(doc.zip);
         doc.location = new GeoPoint(...point);
 
         return doc;
+    }
+
+    delete(id) {
+        if (this.app.isProd) this.app.logger.onError("Should not attempt to delete individual document in production");
+        else return super.delete(id);
     }
 }
 
