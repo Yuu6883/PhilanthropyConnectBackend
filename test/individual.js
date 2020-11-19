@@ -30,8 +30,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl",
             cause: [],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(emptyFirstnameForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -41,8 +41,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl",
             cause: [],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(invalidFirstnameForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -52,8 +52,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl",
             cause: [],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(emptyLastnameForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -63,8 +63,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl@",
             cause: [],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(invalidLastnameForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -74,8 +74,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl",
             cause: [],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(emptyCauseForm);
         assert.ifError(res.error || res.errors);
@@ -85,8 +85,8 @@ describe("Basic Individual Test", async function() {
             lastname: "Beihl",
             cause: ["Invalid Cause"],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(invalidCauseForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -94,10 +94,10 @@ describe("Basic Individual Test", async function() {
         const emptyZipForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(emptyZipForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -105,10 +105,10 @@ describe("Basic Individual Test", async function() {
         const invalidZipForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "920371",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(invalidZipForm);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -116,10 +116,10 @@ describe("Basic Individual Test", async function() {
         const emptySkillsForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
             skills: [],
-            age: "20-29"
+            age: "18-30"
         };
         res = app.db.inds.validate(emptySkillsForm);
         assert.ifError(res.error || res.errors);
@@ -127,9 +127,9 @@ describe("Basic Individual Test", async function() {
         const emptyAgeForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
-            skills: ["exampleSkill"],
+            skills: ["Cooking"],
             age: ""
         };
         res = app.db.inds.validate(emptyAgeForm);
@@ -138,9 +138,9 @@ describe("Basic Individual Test", async function() {
         const invalidAgeForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
-            skills: ["exampleSkill"],
+            skills: ["Cooking"],
             age: "20-295837"
         };
         res = app.db.inds.validate(invalidAgeForm);
@@ -149,10 +149,10 @@ describe("Basic Individual Test", async function() {
         const validForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         res = app.db.inds.validate(validForm);
         assert.ifError(res.error || res.errors);
@@ -172,10 +172,10 @@ describe("Basic Individual Test", async function() {
         const validForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         let doc = app.db.inds.formToDocument(validForm);
         doc.id = testID;
@@ -195,10 +195,10 @@ describe("Basic Individual Test", async function() {
         const updatedForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92122",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
         doc = app.db.inds.formToDocument(updatedForm);
         const updated = await app.db.inds.update(testID, doc);
@@ -230,10 +230,10 @@ describe("Basic Individual Test", async function() {
         const testAuthForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92122",
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
 
         // Valid test
@@ -311,7 +311,7 @@ describe("Basic Individual Test", async function() {
         const testOrgForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",
@@ -321,10 +321,10 @@ describe("Basic Individual Test", async function() {
         const testUpdatedForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            cause: ["Medical"],
             zip: "92037", // we updated the zip
-            skills: ["exampleSkill"],
-            age: "20-29"
+            skills: ["Cooking"],
+            age: "18-30"
         };
 
         // PUT to @me with wrong type of profile (user somehow wants to 
