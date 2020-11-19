@@ -73,8 +73,64 @@ describe("Basic Events Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Endpoint Events test", async() => {
-        // TODO:
+    // TODO
+    
+    it("Events Endpoint CRUD test", async() => {
+
+        // insert org
+        const testOrgID = `test-org-${Date.now()}`;
+
+        const validOrgform = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: [],
+            zip: "92037",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: []
+        };
+
+        let orgDoc = app.db.orgs.formToDocument(validOrgform);
+        orgDoc.id = testOrgID;
+
+        const ref = await app.db.orgs.insert(orgDoc);
+
+        // frontend form to create
+        const test_event_form = {
+            title: "Beach Cleanup",
+            details: "Clean up the beach this weekend for Earth Day!",
+            zip: "92037",
+            skills: [],
+            date: Date.now()
+        };
+
+        let eventDoc = app.db.events.formToDocument(test_event_form);
+        eventDoc.owner = testOrgID;
+
+        const ref = await app.db.events.insert(doc);
+
+        const testPayload = app.testPayload = {
+            "uid": testOrgID,
+        };
+
+        /** @type {Response} */
+        const res = await fetch("http://localhost:3000/api/events/create", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(test_event_form)
+        });
+
+        assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
+        const jsonRes = await res.json();
+        assert(jsonRes.success, "Operation should be successful");
+        
+        const data = (await app.db.events.byID(testPayload.uid)).data();
+        assert(data.owner == testOrgID, "Owner of event and test org ID should match");
+
+        await app.db.events.delete(testPayload.uid);
+
+        // TODO: test other events endpoints
+
     });
 
 });
