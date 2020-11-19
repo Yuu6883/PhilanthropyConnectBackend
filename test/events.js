@@ -128,7 +128,6 @@ describe("Basic Events Test", async function() {
         // Delete org and event
         await app.db.events.delete(jsonRes.id);
         await app.db.orgs.delete(testOrgID);
-
     });
 
 });

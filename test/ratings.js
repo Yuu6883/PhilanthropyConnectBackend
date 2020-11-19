@@ -1,5 +1,6 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
+const fetch = require("node-fetch");
 
 describe("Basic Ratings Test", async function() {
 
@@ -106,7 +107,7 @@ describe("Basic Ratings Test", async function() {
         };
 
         /** @type {Response} */
-        const res = await fetch(`http://localhost:3000/api/organization/rate/${testOrgID}`, {
+        let res = await fetch(`http://localhost:3000/api/organization/rate/${testOrgID}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_rating_form)
@@ -119,12 +120,19 @@ describe("Basic Ratings Test", async function() {
         const data = (await app.db.ratings.byID(jsonRes.id)).data();
         assert(data.owner == testIndiID, "Owner of rating and test individual ID should match");
 
+        // test catch
+        res = await fetch("http://localhost:3000/api/organization/rate/nonExistingOrg", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(test_rating_form)
+        });
+        assert(res.status == 404, `Non existing org should return http status 404 instead of ${res.status}`);
+
         // TODO: test other ratings endpoints
 
         // Delete individual, org, and rating
         await app.db.inds.delete(testIndiID);
         await app.db.orgs.delete(testOrgID);
         await app.db.ratings.delete(jsonRes.id);
-
     });
 });

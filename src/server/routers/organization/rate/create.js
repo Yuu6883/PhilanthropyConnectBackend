@@ -16,10 +16,14 @@ module.exports = {
         const docToInsert = this.db.ratings.formToDocument(validatedForm.value);
         docToInsert.owner = req.payload.uid;
 
-        // TODO: call method to add rating to org
-
         const ref = await this.db.ratings.insert(docToInsert);
 
-        res.send({ success: true, id: ref.id });
+        // try to add rating to org, if it exists
+        try {
+            await this.db.orgs.addRating(req.params.id, ref.id);
+            res.send({ success: true, id: ref.id });
+        } catch (e) {
+            res.sendStatus(404);
+        } 
     }
 }
