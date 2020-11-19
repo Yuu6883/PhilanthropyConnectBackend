@@ -73,8 +73,11 @@ describe("Basic Events Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Endpoint Events test", async() => {
+    it("Endpoint Events CRUD test", async() => {
         // TODO:
+        // Insert Org in db first
+        // Call the event/create endpoint with the payload
+        // 
     });
 
 });

@@ -237,16 +237,25 @@ describe("Basic Individual Test", async function() {
         };
 
         /** @type {Response} */
-        const res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
+        let res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(test_auth_form)
         });
 
-        assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
+        assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
 
         const data = (await app.db.inds.byID(testPayload.uid)).data();
         assert(data.age == test_auth_form.age, "Age should match in the submitted document");
+
+        /** @type {Response} */
+        res = await fetch("http://localhost:3000/api/profile/create?type=individual", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(test_auth_form)
+        });
+
+        assert(res.status == 400, `Already existing profile should return 400 instead of ${res.status}`);
 
         await app.db.inds.delete(testPayload.uid);
 

@@ -7,8 +7,12 @@ module.exports = {
         // TODO: validate user registration form and create either an individual or an organization record
         const type = req.query.type;
 
+        if (await this.db.existsProfile(req.payload.uid)) {
+            return res.status(400).send({ error: "Profile already exists with the assoicated account" });
+        }
+
         if (type == "individual") {
-            
+
             const validatedForm = this.db.inds.schema.validate(req.body);
             if (validatedForm.error || validatedForm.errors) {
                 console.error(validatedForm.error || validatedForm.errors);
@@ -21,7 +25,7 @@ module.exports = {
             doc.email = req.payload.email;
 
             await this.db.inds.insert(doc);
-            return res.sendStatus(200);
+            return res.send({ success: true });
 
         } else if (type == "organization") {
 
@@ -34,6 +38,5 @@ module.exports = {
         // const validatedDocument = this.db.orgs.formToDocument(validatedForm);
         // await this.db.orgs.insert(validatedForm);
         // return res.sendStatus(200);
-
     }
 }
