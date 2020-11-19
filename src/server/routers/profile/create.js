@@ -31,7 +31,17 @@ module.exports = {
 
             // Organization implementation of create goes here
             const validatedForm = this.db.orgs.schema.validate(req.body);
+            console.log(validatedForm.error || validatedForm.errors);
             if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+
+            let doc = this.db.orgs.formToDocument(validatedForm.value);
+
+            doc.id = req.payload.uid;
+            doc.email = req.payload.email;
+
+            await this.db.orgs.insert(doc);
+            return res.send({ success: true });
+
         } else return res.sendStatus(400);
 
         // TODO: Create an organization record

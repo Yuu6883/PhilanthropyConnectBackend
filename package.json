@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "node cli",
-    "test": "mocha"
+    "test": "mocha --timeout 5000"
   },
   "repository": {
     "type": "git",

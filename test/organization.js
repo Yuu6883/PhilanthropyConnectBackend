@@ -1,5 +1,6 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
+const fetch = require("node-fetch");
 
 describe("Basic Organization Test", async function() {
 
@@ -83,13 +84,15 @@ describe("Basic Organization Test", async function() {
         let deleteRes = await app.db.orgs.delete(testID);
         assert(!deleteRes, "No document should be deleted");
 
+
+
         const valid_form = {
-            title: "Yuh",
-            mission: "Fixing broken programmers",
-            cause: [],
+            title: "Habitat For Humanity",
+            mission: "Fixing homelessness one family at a time",
+            cause: ["Disaster Response"],
             zip: "92037",
-            contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
+            contact: "info@sandiegohabitat.org",
+            url: "www.sandiegohabitat.org",
             events: []
         };
         let doc = app.db.orgs.formToDocument(valid_form);
@@ -108,12 +111,12 @@ describe("Basic Organization Test", async function() {
 
         // Update document
         const updated_form = {
-            title: "Yuh",
-            mission: "Fixing broken programmers",
-            cause: [],
+            title: "Habitat For Humanity",
+            mission: "Fixing homelessness one family at a time",
+            cause: ["Disaster Response"],
             zip: "92122",
-            contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
+            contact: "info@sandiegohabitat.org",
+            url: "www.sandiegohabitat.org",
             events: ["new event"]
         };
         doc = app.db.orgs.formToDocument(updated_form);
@@ -132,7 +135,49 @@ describe("Basic Organization Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    it("Organization Database mock test", async() => {
+    it("Organization Endpoint CRUD test", async() => {
+        const testPayload = app.testPayload = {
+            "uid": `org-test-${Date.now()}`,
+            "name": "Habitat Fpr Humanity",
+            "picture": "",
+            "email": "example@habitat.org",
+            "email_verified": true
+        };
+
+        // frontend form to create
+        const test_auth_form = {
+            title: "Habitat For Humanity",
+            mission: "Fixing homelessness one family at a time",
+            cause: ["Disaster Response"],
+            zip: "92037",
+            contact: "info@sandiegohabitat.org",
+            url: "www.sandiegohabitat.org",
+            events: []
+        };
+
+        /** @type {Response} */
+        let res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(test_auth_form)
+        });
+
+        assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
+
+        const data = (await app.db.orgs.byID(testPayload.uid)).data();
+        assert(data.mission == test_auth_form.mission, "Mission should match in the submitted document");
+
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(test_auth_form)
+        });
+
+        assert(res.status == 400, `Already existing profile should return 400 instead of ${res.status}`);
+
+        await app.db.orgs.delete(testPayload.uid);
+
+        // TODO: test other individual endpoints
     });
 
 });
