@@ -52,10 +52,17 @@ class Organizations extends Template {
         /** @type {OrganizationDocument} */
         const doc = form;
         
-        // Default to empty array
+        // Defaults
+        doc.email = "";
+        doc.picture = "";
         doc.ratings = doc.ratings || [];
         doc.followers = doc.followers || [];
         return doc;
+    }
+
+    delete(id) {
+        if (this.app.isProd) this.app.logger.onError("Should not attempt to delete orgnization document in production");
+        else return super.delete(id);
     }
 
     /**
