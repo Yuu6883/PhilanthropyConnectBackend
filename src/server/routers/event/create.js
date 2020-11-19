@@ -2,11 +2,16 @@
 module.exports = {
     method: "post",
     path: "/events/create",
-    handler: function (req, res) {
+    handler: async function (req, res) {
+
         // Design use case 4.1
-        // TODO: validate user event form and create an event
+        const orgDoc = await this.db.orgs.byID(req.payload.uid);
+        if (!orgDoc.exists) return res.sendStatus(403);
+
         const validatedForm = this.db.events.schema.validate(req.body);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
-        const validatedDoc = this.db.events.formToDocument(validatedForm);
+        const docToInsert = this.db.events.formToDocument(validatedForm.value);
+        const ref = await this.db.events.insert(docToInsert);
+        res.send({ success: true, id: ref.id });
     }
 }

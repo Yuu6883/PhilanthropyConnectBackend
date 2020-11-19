@@ -1,5 +1,6 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
+const fetch = require("node-fetch");
 
 describe("Basic Events Test", async function() {
     
@@ -74,7 +75,6 @@ describe("Basic Events Test", async function() {
     });
 
     // TODO
-    
     it("Events Endpoint CRUD test", async() => {
 
         // insert org
@@ -93,8 +93,9 @@ describe("Basic Events Test", async function() {
         let orgDoc = app.db.orgs.formToDocument(validOrgform);
         orgDoc.id = testOrgID;
 
-        const ref = await app.db.orgs.insert(orgDoc);
+        await app.db.orgs.insert(orgDoc);
 
+        // CREATE TEST
         // frontend form to create
         const test_event_form = {
             title: "Beach Cleanup",
@@ -104,12 +105,7 @@ describe("Basic Events Test", async function() {
             date: Date.now()
         };
 
-        let eventDoc = app.db.events.formToDocument(test_event_form);
-        eventDoc.owner = testOrgID;
-
-        const ref = await app.db.events.insert(doc);
-
-        const testPayload = app.testPayload = {
+        app.testPayload = {
             "uid": testOrgID,
         };
 
@@ -124,12 +120,14 @@ describe("Basic Events Test", async function() {
         const jsonRes = await res.json();
         assert(jsonRes.success, "Operation should be successful");
         
-        const data = (await app.db.events.byID(testPayload.uid)).data();
+        const data = (await app.db.events.byID(jsonRes.id)).data();
         assert(data.owner == testOrgID, "Owner of event and test org ID should match");
 
-        await app.db.events.delete(testPayload.uid);
-
         // TODO: test other events endpoints
+
+        // Delete org and event
+        await app.db.events.delete(jsonRes.id);
+        await app.db.orgs.delete(testOrgID);
 
     });
 

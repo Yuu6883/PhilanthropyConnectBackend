@@ -11,4 +11,9 @@ module.exports = class DB {
         this.events  = new Events(app);
         this.ratings = new Ratings(app);
     }
+
+    /** @param {string} id */
+    async existsProfile(id) {
+        return (await this.inds.byID(id)).exists || (await this.orgs.byID(id)).exists;
+    }
 }

@@ -88,7 +88,7 @@ class Server {
 
             if (!endpoint.allowGuest) {
                 this.api.use(endpoint.path, (req, res, next) => {
-                    if (!req.payload) return res.sendStatus(403);
+                    if (!req.payload) return res.sendStatus(401);
                     next();
                 });
             }
