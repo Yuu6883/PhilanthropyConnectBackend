@@ -34,9 +34,15 @@ class Ratings extends Template {
         /** @type {RatingDocument} */
         const doc = form;
         
+        // Default
         doc.owner = "";  // individual's ID
 
         return form;
+    }
+
+    delete(id) {
+        if (this.app.isProd) this.app.logger.onError("Should not attempt to delete orgnization document in production");
+        else return super.delete(id);
     }
 }
 

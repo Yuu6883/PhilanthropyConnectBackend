@@ -1,5 +1,7 @@
 const Template = require("./template");
 const ZIPCodes = require("../modules/us-zip");
+
+const { validSkills } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
 
@@ -21,8 +23,7 @@ const schema = Joi.object({
         .error(() => new Error("Invalid US zip code")),
     skills: Joi.array().items(
         Joi.string()
-            .min(2)
-            .max(40)
+            .valid(...validSkills)
     ),
     date: Joi.date().timestamp()
         .required()
@@ -49,12 +50,18 @@ class Events extends Template {
         /** @type {OrgEventDocument} */
         const doc = form;
 
+        // Default
         doc.owner = "";  // org's ID
         
         const point = ZIPCodes.map.get(doc.zip);
         doc.location = new GeoPoint(...point);
 
         return doc;
+    }
+
+    delete(id) {
+        if (this.app.isProd) this.app.logger.onError("Should not attempt to delete orgnization document in production");
+        else return super.delete(id);
     }
 }
 

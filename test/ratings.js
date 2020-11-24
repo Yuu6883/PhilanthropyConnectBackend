@@ -8,6 +8,12 @@ describe("Basic Ratings Test", async function() {
     
     after(async () => await app.stop());
     
+    /**
+     * Testing events fields within the user form
+     * Expected behavior: 
+     * stars: 1 < number < 5
+     * description: required, 2 < length < 200
+     */
     it("Ratings form validation", () => {
         const invalidForm = {};
         let res = app.db.ratings.validate(invalidForm);
@@ -23,8 +29,8 @@ describe("Basic Ratings Test", async function() {
     });
 
     it("Database Ratings CRUD tests", async() => {
+        
         const testIndID = `test-ind-${Date.now()}`;
-
         const validForm = {
             stars: 4,
             description: "The organization was very friendly and absolutely warmed my heart helping those in need."
@@ -112,7 +118,7 @@ describe("Basic Ratings Test", async function() {
             body: JSON.stringify(testRatingForm)
         });
 
-        assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
+        assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
         const jsonRes = await res.json();
         assert(jsonRes.success && jsonRes.id, "Operation should be successful");
         

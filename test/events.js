@@ -8,6 +8,18 @@ describe("Basic Events Test", async function() {
     
     after(async () => await app.stop());
     
+    /**
+     * Testing events fields within the user form
+     * Expected behavior: 
+     * Title: required, alphanumeric
+     * and 2 < length < 40
+     * Details: required, alphanumeric
+     * and 2 < length < 200
+     * Zip: Required, must be valid zip code
+     * Skills: can be empty, must be within supported 
+     * valid skills
+     * Date: required
+     */
     it("Events form validation", () => {
         const invalidForm = {};
         let res = app.db.events.validate(invalidForm);
@@ -17,7 +29,7 @@ describe("Basic Events Test", async function() {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
-            skills: ["Painting"],
+            skills: ["Art skills"],
             date: Date.now()
         };
 
@@ -28,12 +40,11 @@ describe("Basic Events Test", async function() {
     it("Database Events CRUD tests", async() => {
 
         const testOrgID = `test-org-${Date.now()}`;
-
         const validForm = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
-            skills: ["Painting"],
+            skills: ["Art skills"],
             date: Date.now()
         };
 
@@ -44,6 +55,7 @@ describe("Basic Events Test", async function() {
         const snapshot = await ref.get();
         // Create successful
         assert(snapshot.exists, "Document should be inserted");
+        assert(snapshot.id == testOrgID, "ID should match test ID");
 
         // Read document
         const readDoc = snapshot.data();
@@ -55,7 +67,7 @@ describe("Basic Events Test", async function() {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
-            skills: ["Painting", "Construction"],
+            skills: ["Art skills", "Multimedia"],
             date: Date.now()
         };
         doc = app.db.events.formToDocument(updatedForm);
@@ -74,12 +86,10 @@ describe("Basic Events Test", async function() {
         assert(!none.exists, "No document expected");
     });
 
-    // TODO
     it("Events Endpoint CRUD test", async() => {
 
         // insert org
         const testOrgID = `test-org-${Date.now()}`;
-
         const validOrgform = {
             title: "Yuh",
             mission: "Fixing broken programmers",
@@ -92,7 +102,6 @@ describe("Basic Events Test", async function() {
 
         let orgDoc = app.db.orgs.formToDocument(validOrgform);
         orgDoc.id = testOrgID;
-
         await app.db.orgs.insert(orgDoc);
 
         // CREATE TEST
@@ -116,7 +125,7 @@ describe("Basic Events Test", async function() {
             body: JSON.stringify(testEventForm)
         });
 
-        assert(res.status == 200, `Invalid form should return http status 200 instead of ${res.status}`);
+        assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
         const jsonRes = await res.json();
         assert(jsonRes.success, "Operation should be successful");
         
