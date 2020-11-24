@@ -43,7 +43,7 @@ class Events extends Template {
     }
 
     /** 
-     * @param {OrgEventForm}
+     * @param {OrgEventForm} form
      * @returns {OrgEventDocument}
      */
     formToDocument(form) {

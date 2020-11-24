@@ -27,7 +27,7 @@ class Ratings extends Template {
     }
 
     /** 
-     * @param {RatingForm}
+     * @param {RatingForm} form
      * @returns {RatingDocument}
      */
     formToDocument(form) {
