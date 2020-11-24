@@ -1,12 +1,10 @@
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "delete",
-    path: "/organization/rate/:id", // review id
+    path: "/rate/:id", // review id
     handler: async function (req, res) {
         // Design use case 7.3
-        const indiDoc = await this.db.inds.byID(req.payload.uid);
-        if (!indiDoc.exists) return res.sendStatus(403);
-
+        
         const reviewDoc = await this.db.ratings.byID(req.params.id);
         if (!reviewDoc.exists) return res.sendStatus(404);
 

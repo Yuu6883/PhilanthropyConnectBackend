@@ -1,11 +1,15 @@
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "put",
-    path: "/organization/rate/:id", // id here is review id
-    handler: function (req, res) {
+    path: "/rate/:id", // id here is review id
+    handler: async function (req, res) {
         // Design use case 8.2
-        const indiDoc = await this.db.inds.byID(req.payload.uid);
-        if (!indiDoc.exists) return res.sendStatus(403);
+
+        // No need to verify individual because we assume create endpoint works
+        // and we check the payload uid later
+
+        // const indiDoc = await this.db.inds.byID(req.payload.uid);
+        // if (!indiDoc.exists) return res.sendStatus(403);
 
         // Get the document
         const reviewDoc = await this.db.ratings.byID(req.params.id);
@@ -25,7 +29,7 @@ module.exports = {
         // update rating document in database
         try {
             await reviewDoc.ref.update(docToUpdate);
-            res.sendStatus(200);
+            res.send({ success: true });
         } catch (e) {
             res.sendStatus(500);
         }
