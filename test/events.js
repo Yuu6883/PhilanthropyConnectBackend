@@ -117,24 +117,77 @@ describe("Basic Events Test", async function() {
             "uid": testOrgID,
         };
 
+        // Create endpoint tests
         /** @type {Response} */
-        const res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
+        let res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(testEventForm)
         });
 
         assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
-        const jsonRes = await res.json();
-        assert(jsonRes.success, "Operation should be successful");
+        let jsonRes = await res.json();
+        const eventID = jsonRes.id;
+        assert(jsonRes.success && eventID, "Operation should be successful");
         
-        const data = (await app.db.events.byID(jsonRes.id)).data();
+        const data = (await app.db.events.byID(eventID)).data();
         assert(data.owner == testOrgID, "Owner of event and test org ID should match");
 
-        // TODO: test other events endpoints
+        // Get endpoint
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "GET"
+        });
+
+        jsonRes = await res.json();
+        
+        assert(res.status == 200, `Read endpoint should return http status 200 instead of ${res.status}`);
+        assert(jsonRes.owner == testOrgID && jsonRes.zip == "92037", "Event document data should match");
+
+        const testUpdateEventForm = {
+            title: "Beach Cleanup",
+            details: "Clean up the beach this weekend for Earth Day!",
+            zip: "92122",
+            skills: [],
+            date: Date.now()
+        };
+
+        // Update tests
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testUpdateEventForm)
+        });
+        assert(res.status == 200, `Update endpoint should return http status 200 instead of ${res.status} (${res.statusText})`);
+
+        app.testPayload.uid = "some-other-uid";
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testUpdateEventForm)
+        });
+        assert(res.status == 401, "Unauthorized response expected on update endpoint");
+
+        // Delete tests
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "DELETE"
+        });
+        assert(res.status == 401, "Unauthorized response expected on delete endpoint");
+        // Put back payload id
+        app.testPayload.uid = testOrgID;
+        
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "DELETE"
+        });
+        assert(res.status == 200, `Delete endpoint should return http status 200 instead of ${res.status} (${res.statusText})`);
+
+        // Confirm the event is deleted
+        res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
+            method: "GET"
+        });
+        assert(res.status == 404, `Read endpoint should return http status 404 instead of ${res.status} (${res.statusText})`);
 
         // Delete org and event
-        await app.db.events.delete(jsonRes.id);
+        await app.db.events.delete(eventID);
         await app.db.orgs.delete(testOrgID);
     });
 
