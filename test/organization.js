@@ -175,9 +175,106 @@ describe("Basic Organization Test", async function() {
 
         assert(res.status == 400, `Already existing profile should return 400 instead of ${res.status}`);
 
-        await app.db.orgs.delete(testPayload.uid);
+        // GET the profile we created through the first test
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/${testPayload.uid}?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, `Profile GET on created document endpoint should return 200 instead of ${res.status}`);
+        let jsonRes = await res.json();
+        assert(jsonRes.success && jsonRes.profile.contact == testAuthForm.contact, "Response should be successful and the fields matches");
 
-        // TODO: test other individual endpoints
+        // GET the profile we created through the first test, but with type=individual query string
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/${testPayload.uid}?type=individual`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 404, `Profile GET on endpoint with type=individual should return 404 instead of ${res.status}`);
+
+        // GET the profile we created through the first test, but without query string
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/${testPayload.uid}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 400, `Profile GET on endpoint without query string should return 400 instead of ${res.status}`);
+
+        // GET the user's profile with @me
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/@me`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
+        jsonRes = await res.json();
+        assert(jsonRes.success && jsonRes.profile.contact == testAuthForm.contact, "Response should be successful and the fields matches");
+
+        // Remove our test authorization from app
+        delete app.testPayload; 
+        // GET the user's profile with @me but NOT authorized (without payload)
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/@me`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 401, `Profile GET on @me without authorization should return 401 instead of ${res.status}`);
+
+        // Put our test authorization back to app
+        app.testPayload = testPayload;
+
+        // Update tests
+        // PUT to not @me
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/otherUser`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testAuthForm)
+        });
+        assert(res.status == 403, `Profile PUT on wrong endpoint after /api/profile should return 403 instead of ${res.status}`);
+
+        const testIndiForm = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Medical"],
+            zip: "92122",
+            skills: ["Cooking"],
+            age: "18-30"
+        };
+        
+        const testUpdatedForm = {
+            title: "Habitat For Humanity",
+            mission: "Fixing homelessness one family at a time",
+            cause: ["Medical"],
+            zip: "92122", // zip is updated
+            contact: "info@sandiegohabitat.org",
+            url: "www.sandiegohabitat.org",
+            events: []
+        };
+
+        // PUT to @me with wrong type of profile (user somehow wants to 
+        // hack their profile to become an individual or frontend error)
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/@me?type=individual`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testIndiForm)
+        });
+        assert(res.status == 404, `Profile PUT on @me without authorization should return 404 instead of ${res.status}`);
+
+        // PUT to @me
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/@me?type=organization`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testUpdatedForm)
+        });
+        jsonRes = await res.json();
+        assert(res.status == 200 && jsonRes.success, `Profile update should be successful (status: ${res.status})`);
+
+        // GET the user's profile with @me (to test if the document updated)
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/@me`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
+        jsonRes = await res.json();
+        assert(jsonRes.success && jsonRes.profile.zip == testUpdatedForm.zip, "Response should have updated zip");
+
+        await app.db.orgs.delete(testPayload.uid);
     });
 
 });
