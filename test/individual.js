@@ -334,7 +334,7 @@ describe("Basic Individual Test", async function() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(testOrgForm)
         });
-        assert(res.status == 403, `Profile PUT on @me without authorization should return 403 instead of ${res.status}`);
+        assert(res.status == 404, `Profile PUT on @me without authorization should return 404 instead of ${res.status}`);
 
         // PUT to @me
         res = await fetch(`http://localhost:${app.config.port}/api/profile/@me?type=individual`, {
