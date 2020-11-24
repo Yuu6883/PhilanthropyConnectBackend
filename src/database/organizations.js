@@ -76,11 +76,13 @@ class Organizations extends Template {
     }
 
     /**
-     * @param {string} org organization id
      * @param {string} id rating id
      */
-    removeRating(org, id) {
-        return this.ref.doc(org).update({
+    removeRating(id) {
+        // Find Org ID first
+        const result = await this.ref.where("ratings", "array-contains", id).get();
+        const doc = result.docs[0];
+        return doc.ref.update({
             ratings: firestore.FieldValue.arrayRemove(id)
         });
     }
