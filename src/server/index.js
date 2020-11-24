@@ -115,6 +115,7 @@ class Server {
         if (this.webServer) return false;
         
         if (this.isDev) {
+            /** @type {admin.auth.DecodedIdToken} */
             this.testPayload = {}; // payload can be set in dev mode
             this.logger.warn("Application starting in dev mode");
         } else {
