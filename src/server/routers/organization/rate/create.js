@@ -24,7 +24,7 @@ module.exports = {
             res.send({ success: true, id: ref.id });
         } catch (e) {
             // Remove the rating if we failed to add it to some org document
-            await this.db.ratings.delete(ref.id);
+            await ref.delete().catch(() => {});
             res.sendStatus(404);
         } 
     }
