@@ -58,11 +58,6 @@ class Events extends Template {
 
         return doc;
     }
-
-    delete(id) {
-        if (this.app.isProd) this.app.logger.onError("Should not attempt to delete orgnization document in production");
-        else return super.delete(id);
-    }
 }
 
 module.exports = Events;
