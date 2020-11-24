@@ -111,6 +111,7 @@ describe("Basic Ratings Test", async function() {
             "uid": testIndiID,
         };
 
+        // Create endpoint
         /** @type {Response} */
         let res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/${testOrgID}`, {
             method: "POST",
@@ -119,13 +120,14 @@ describe("Basic Ratings Test", async function() {
         });
 
         assert(res.status == 200, `Valid form should return http status 200 instead of ${res.status}`);
-        const jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.id, "Operation should be successful");
+        let jsonRes = await res.json();
+        const ratingID = jsonRes.id;
+        assert(jsonRes.success && ratingID, "Operation should be successful");
         
-        const data = (await app.db.ratings.byID(jsonRes.id)).data();
+        const data = (await app.db.ratings.byID(ratingID)).data();
         assert(data.owner == testIndiID, "Owner of rating and test individual ID should match");
-
-        // test catch
+        
+        // Test 404
         res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/nonExistingOrg`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -133,11 +135,65 @@ describe("Basic Ratings Test", async function() {
         });
         assert(res.status == 404, `Non existing org should return http status 404 instead of ${res.status}`);
 
-        // TODO: test other ratings endpoints
+        // Get endpoint
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/${testOrgID}`, {
+            method: "GET"
+        });
+
+        jsonRes = await res.json();
+        
+        assert(res.status == 200 && jsonRes.success && Array.isArray(jsonRes.ratings), "Read endpoint should return rating array");
+        const ratingEndpointData = jsonRes.ratings[0];
+        assert(ratingEndpointData.owner == testIndiID && ratingEndpointData.stars == 4, "Rating document data should match");
+
+        const testUpdateRatingForm = {
+            stars: 5,
+            description: "The organization was very very very friendly and absolutely warmed my heart helping those in need."
+        };
+
+        // Update tests
+        res = await fetch(`http://localhost:${app.config.port}/api/rate/${ratingID}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testUpdateRatingForm)
+        });
+        assert(res.status == 200, `Update endpoint should return http status 200 instead of ${res.status} (${res.statusText})`);
+
+        app.testPayload.uid = "some-other-uid";
+        res = await fetch(`http://localhost:${app.config.port}/api/rate/${ratingID}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(testUpdateRatingForm)
+        });
+        assert(res.status == 401, "Unauthorized response expected on update endpoint");
+
+        // Delete tests
+        res = await fetch(`http://localhost:${app.config.port}/api/rate/${ratingID}`, {
+            method: "DELETE"
+        });
+        assert(res.status == 401, "Unauthorized response expected on delete endpoint");
+        // Put back payload id
+        app.testPayload.uid = testIndiID;
+        
+        res = await fetch(`http://localhost:${app.config.port}/api/rate/${ratingID}`, {
+            method: "DELETE"
+        });
+        assert(res.status == 200, `Delete endpoint should return http status 200 instead of ${res.status} (${res.statusText})`);
+
+        // Confirm the rating is deleted
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/${testOrgID}`, {
+            method: "GET"
+        });
+
+        jsonRes = await res.json();
+        
+        assert(res.status == 200 && jsonRes.success && 
+            Array.isArray(jsonRes.ratings) && !jsonRes.length, 
+            "Delete endpoint should return empty rating array");
 
         // Delete individual, org, and rating
         await app.db.inds.delete(testIndiID);
         await app.db.orgs.delete(testOrgID);
-        await app.db.ratings.delete(jsonRes.id);
+        await app.db.ratings.delete(ratingID);
     });
 });
