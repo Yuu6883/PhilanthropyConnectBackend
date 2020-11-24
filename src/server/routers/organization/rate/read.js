@@ -10,9 +10,9 @@ module.exports = {
 
         if (!orgDoc.exists) return res.sendStatus(404);
         const data = orgDoc.data();
-        
+
         // Map the rating id's to their document
         const ratings = await Promise.all(data.ratings.map(id => this.db.ratings.byID(id)));
-        res.send(ratings.map(r => r.data()));
+        res.send({ success: true, ratings: ratings.map(r => r.data()) });
     }
 }
