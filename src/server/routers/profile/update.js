@@ -26,8 +26,8 @@ module.exports = {
             await db.update(req.payload.uid, doc);
             return res.send({ success: true });
         } catch (e) {
-            // Forbidden to update other type of profile (uid doesn't exist)
-            return res.sendStatus(403);
+            // uid doesn't exist
+            return res.sendStatus(404);
         }
     }
 }
