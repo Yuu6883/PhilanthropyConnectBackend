@@ -55,7 +55,6 @@ describe("Basic Events Test", async function() {
         const snapshot = await ref.get();
         // Create successful
         assert(snapshot.exists, "Document should be inserted");
-        assert(snapshot.id == testOrgID, "ID should match test ID");
 
         // Read document
         const readDoc = snapshot.data();
