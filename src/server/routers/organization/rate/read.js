@@ -13,6 +13,6 @@ module.exports = {
 
         // Map the rating id's to their document
         const ratings = await Promise.all(data.ratings.map(id => this.db.ratings.byID(id)));
-        res.send({ success: true, ratings: ratings.map(r => r.data()) });
+        res.send(ratings.map(r => r.data()));
     }
 }

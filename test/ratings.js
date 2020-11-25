@@ -142,8 +142,8 @@ describe("Basic Ratings Test", async function() {
 
         jsonRes = await res.json();
         
-        assert(res.status == 200 && jsonRes.success && Array.isArray(jsonRes.ratings), "Read endpoint should return rating array");
-        const ratingEndpointData = jsonRes.ratings[0];
+        assert(res.status == 200 && jsonRes && Array.isArray(jsonRes), "Read endpoint should return rating array");
+        const ratingEndpointData = jsonRes[0];
         assert(ratingEndpointData.owner == testIndiID && ratingEndpointData.stars == 4, "Rating document data should match");
 
         const testUpdateRatingForm = {
@@ -187,8 +187,8 @@ describe("Basic Ratings Test", async function() {
 
         jsonRes = await res.json();
         
-        assert(res.status == 200 && jsonRes.success && 
-            Array.isArray(jsonRes.ratings) && !jsonRes.length, 
+        assert(res.status == 200 && jsonRes && 
+            Array.isArray(jsonRes) && !jsonRes.length, 
             "Delete endpoint should return empty rating array");
 
         // Delete individual, org, and rating

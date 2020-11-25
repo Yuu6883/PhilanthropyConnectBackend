@@ -34,6 +34,6 @@ module.exports = {
         // Send the document back to client if it exists
         const doc = await db.byID(req.params.id);
         if (!doc.exists) return res.sendStatus(404);
-        else return res.send({ success: true, type, profile: doc.data() });
+        else return res.send(doc.data());
     }
 }

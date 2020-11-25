@@ -262,7 +262,7 @@ describe("Basic Individual Test", async function() {
         });
         assert(res.status == 200, `Profile GET on created document endpoint should return 200 instead of ${res.status}`);
         let jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.profile.age == testAuthForm.age, "Response should be successful and the fields matches");
+        assert(jsonRes && jsonRes.age == testAuthForm.age, "Response should be successful and the fields matches");
 
         // GET the profile we created through the first test, but with type=organization query string
         res = await fetch(`http://localhost:${app.config.port}/api/profile/${testPayload.uid}?type=organization`, {
