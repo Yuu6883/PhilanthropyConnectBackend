@@ -13,14 +13,10 @@ module.exports = {
             // Get from either collections
             let doc = (await this.db.inds.byID(req.payload.uid)).data() || 
                       (await this.db.orgs.byID(req.payload.uid)).data();
-
-            if (!doc) return res.sendStatus(500);
-            return res.send({
-                success: true, 
-                // Quick hack to distinguish 2 types of profile
-                type: doc.url ? "organization" : "individual", 
-                profile: doc
-            });
+            // First time user calls this
+            if (!doc) return res.sendStatus(404);
+            doc.type = doc.url ? "organization" : "individual";
+            return res.send(doc);
         }
 
         // User wants to get others' profile (knowing what type it is)

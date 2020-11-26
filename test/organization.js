@@ -205,7 +205,9 @@ describe("Basic Organization Test", async function() {
         });
         assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
         jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.profile.contact == testAuthForm.contact, "Response should be successful and the fields matches");
+        assert(jsonRes && 
+            jsonRes.type == "organization" &&
+            jsonRes.contact == testAuthForm.contact, "Response should be successful and the fields matches");
 
         // Remove our test authorization from app
         delete app.testPayload; 
@@ -272,7 +274,7 @@ describe("Basic Organization Test", async function() {
         });
         assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
         jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.profile.zip == testUpdatedForm.zip, "Response should have updated zip");
+        assert(jsonRes && jsonRes.zip == testUpdatedForm.zip, "Response should have updated zip");
 
         await app.db.orgs.delete(testPayload.uid);
     });

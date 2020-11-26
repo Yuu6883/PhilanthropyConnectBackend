@@ -26,6 +26,6 @@ module.exports = {
             // Remove the rating if we failed to add it to some org document
             await ref.delete().catch(() => {});
             res.sendStatus(404);
-        } 
+        }
     }
 }

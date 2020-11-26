@@ -285,7 +285,9 @@ describe("Basic Individual Test", async function() {
         });
         assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
         jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.profile.age == testAuthForm.age, "Response should be successful and the fields matches");
+        assert(jsonRes && 
+            jsonRes.type == "individual" &&
+            jsonRes.age == testAuthForm.age, "Response should be successful and the fields matches");
 
         // Remove our test authorization from app
         delete app.testPayload; 
@@ -352,7 +354,7 @@ describe("Basic Individual Test", async function() {
         });
         assert(res.status == 200, `Profile GET on @me endpoint should return 200 instead of ${res.status}`);
         jsonRes = await res.json();
-        assert(jsonRes.success && jsonRes.profile.zip == testUpdatedForm.zip, "Response should have updated zip");
+        assert(jsonRes && jsonRes.zip == testUpdatedForm.zip, "Response should have updated zip");
 
         // TODO: make this run even when the test fails
         await app.db.inds.delete(testPayload.uid);
