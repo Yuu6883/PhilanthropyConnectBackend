@@ -35,7 +35,7 @@ describe("Feed Test", async function() {
             url: "branson.org",
             events: []
         };
-        let orgDoc = app.db.orgs.formToDocument(validOrgform2);
+        orgDoc = app.db.orgs.formToDocument(validOrgform2);
         orgDoc.id = testOrgID2;
         await app.db.orgs.insert(orgDoc);
 
@@ -49,7 +49,7 @@ describe("Feed Test", async function() {
             url: "vivian.org",
             events: []
         };
-        let orgDoc = app.db.orgs.formToDocument(validOrgform3);
+        orgDoc = app.db.orgs.formToDocument(validOrgform3);
         orgDoc.id = testOrgID3;
         await app.db.orgs.insert(orgDoc);
 
