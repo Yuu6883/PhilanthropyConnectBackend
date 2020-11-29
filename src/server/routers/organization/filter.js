@@ -1,14 +1,14 @@
-const { validCauses, validSkills } = require("../constants");
+const { validCauses, validSkills } = require("../../../constants");
 const Joi = require("joi");
 const { withinRadius } = require("geolib");
-const ZIPCodes = require("../modules/us-zip");
+const ZIPCodes = require("../../../modules/us-zip");
 const { GeoPoint } = require("@google-cloud/firestore");
 
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "get",
     path: "/organization",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 3.1 - 3.3
         // /api/organizations/filter?=["filter1","filter2","etc"]
         
