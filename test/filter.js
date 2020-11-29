@@ -1,6 +1,8 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
 const fetch = require("node-fetch");
+const Joi = require("joi");
+const { validCauses, validSkills } = require("../src/constants");
 
 describe("Basic Search Filter Test", async function() {
 
@@ -24,7 +26,44 @@ describe("Basic Search Filter Test", async function() {
      * - distance: Radius area to search within  (Integer, in miles)
      */
     it("Filter form validation", () => {
+
+        // Locally instantiate implemented schema as filter.schema is 
+        // not accessible by this test function
+        /**
+         * @type {Joi.ObjectSchema} 
+         * Format the frontend follows when sending a request
+         * to this endpoint
+         */
+        const schema = Joi.object({
+
+            // User calling from Causes or My Causes
+            followed: Joi.boolean()
+                .required(),
+            
+            // User queries for causes
+            causes: Joi.array().items(
+                Joi.string()
+                    .valid(...validCauses)
+            ),
+
+            // User wants to use the skills listed on their profile
+            mySkills: Joi.boolean()
+                .required(),
+
+            // User queries for skills
+            skills: Joi.array().items( 
+                Joi.string()
+                    .valid(...validSkills)
+            ),
+
+            // User queries for distance in miles
+            distance: Joi.number()
+        });
+
         // Empty form 
+        const emptyForm = {};
+        let res = schema.validate(emptyForm);
+        assert(!!(res.error || res.errors), "Empty form should throw an error");
         // Invalid user
         // No followed
         // No mySkills
