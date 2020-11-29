@@ -5,7 +5,7 @@ const Organizations = require("../../../database/organizations");
 module.exports = {
     method: "get",
     path: "/organization/feed",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 4.4 & 4.5
 
         // Check if person requesting is an org or individual
