@@ -44,7 +44,10 @@ module.exports = {
         });
 
         // Query individual db for user location
-        let user = (await this.db.inds.byID(req.payload.uid)).data();
+        let user = (await this.db.inds.byID(req.payload.uid));
+        if (!user.exists) return res.sendStatus(403);
+        user = user.data();
+        
 
         // Validate the filter query
         const validatedForm = schema.validate(req.body);
