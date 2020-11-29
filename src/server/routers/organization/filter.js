@@ -7,7 +7,7 @@ const { GeoPoint } = require("@google-cloud/firestore");
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "get",
-    path: "/organization",
+    path: "/organization/filter",
     handler: async function (req, res) {
         // Design use case 3.1 - 3.3
         // /api/organizations/filter?=["filter1","filter2","etc"]
@@ -50,15 +50,15 @@ module.exports = {
         
 
         // Validate the filter query
-        const validatedForm = schema.validate(req.body);
+        const validatedForm = schema.validate(req.query);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
         
         // Query only within followed orgs
-        if (req.body.followed) {
+        if (req.query.followed) {
             // Query parameters: Defaults to all valid filters if parameter is empty
-            const causesQuery = req.body.causes.length ? req.body.causes : validCauses;
-            const skillsQuery = req.body.mySkills ? user.skills : req.body.skills ? req.body.skills : validSkills;
-            const distQuery   = req.body.distance ? req.body.distance * 1.609 : 50 * 1.609;
+            const causesQuery = req.query.causes.length ? req.query.causes : validCauses;
+            const skillsQuery = req.query.mySkills ? user.skills : req.query.skills ? req.query.skills : validSkills;
+            const distQuery   = req.query.distance ? req.query.distance * 1.609 : 50 * 1.609;
 
             // Query db for all followed organizations and filter it based on given filters
             const query       = await Promise.all(user.following.map(id => this.db.orgs.byID(id)));
@@ -109,9 +109,9 @@ module.exports = {
         // User is calling for all organizations
         } else {
             // Query parameters: Defaults to all valid filters if parameter is empty
-            const causesQuery = req.body.causes.length ? req.body.causes : validCauses;
-            const skillsQuery = req.body.mySkills ? user.skills : req.body.skills ? req.body.skills : validSkills;
-            const distQuery   = req.body.distance ? req.body.distance * 1.609 : 50 * 1.609;
+            const causesQuery = req.query.causes.length ? req.query.causes : validCauses;
+            const skillsQuery = req.query.mySkills ? user.skills : req.query.skills ? req.query.skills : validSkills;
+            const distQuery   = req.query.distance ? req.query.distance * 1.609 : 50 * 1.609;
 
             // Query db for causes
             const query       = this.db.orgs.where("causes", "array-contains-any", causesQuery);
