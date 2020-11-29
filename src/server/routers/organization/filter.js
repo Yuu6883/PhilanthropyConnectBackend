@@ -63,7 +63,7 @@ module.exports = {
             // Query db for all followed organizations and filter it based on given filters
             const query       = await Promise.all(user.following.map(id => this.db.orgs.byID(id)));
             let followedOrgs  = query.map(org => org.data());
-            followedOrgs = followedOrgs.filter(_ = (org) => {
+            const result = followedOrgs.filter(_ = (org) => {
 
                 /**
                  * Search intended functionality:
@@ -104,7 +104,7 @@ module.exports = {
                 indLoc = new GeoPoint(...(ZIPCodes.map.get(user.zip)));
                 return retval ? withinRadius(orgLoc, indLoc, distQuery) : false;
             });
-            return res.send(followedOrgs);
+            return res.send(result);
         
         // User is calling for all organizations
         } else {
@@ -134,7 +134,7 @@ module.exports = {
                 indLoc = new GeoPoint(...(ZIPCodes.map.get(user.zip)));
                 return retval ? withinRadius(orgLoc, indLoc, distQuery) : false;
             });
-            return result;
+            return res.send(result);
         }
     }
 }
