@@ -25,7 +25,7 @@ declare type ID = { id: string; }
 declare type IndividualForm = {
     firstname: string;
     lastname:  string;
-    cause:     string[];
+    causes:    string[];
     zip:       string;
     skills:    string[];
     age:    string;
@@ -41,7 +41,7 @@ declare type IndividualDocument = {
 declare type OrganizationForm = {
     title:   string;
     mission: string;
-    cause:   string[];
+    causes:  string[];
     zip:     string;
     contact: string;
     url: string;
@@ -76,5 +76,11 @@ declare type OrgEventDocument = {
     owner:      string;  // org's ID
     location:   FirebaseFirestore.GeoPoint;
 } & OrgEventForm;
+
+declare type FilterOptions = {
+    causes:   string[];
+    skills:   string[];
+    distance: number;
+}
 
 // Add more types as you need

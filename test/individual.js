@@ -28,7 +28,7 @@ describe("Basic Individual Test", async function() {
         const emptyFirstnameForm = {
             firstname: "",
             lastname: "Beihl",
-            cause: [],
+            causes: [],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -39,7 +39,7 @@ describe("Basic Individual Test", async function() {
         const invalidFirstnameForm = {
             firstname: "Branson@",
             lastname: "Beihl",
-            cause: [],
+            causes: [],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -50,7 +50,7 @@ describe("Basic Individual Test", async function() {
         const emptyLastnameForm = {
             firstname: "Branson@",
             lastname: "Beihl",
-            cause: [],
+            causes: [],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -61,7 +61,7 @@ describe("Basic Individual Test", async function() {
         const invalidLastnameForm = {
             firstname: "Branson",
             lastname: "Beihl@",
-            cause: [],
+            causes: [],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -72,7 +72,7 @@ describe("Basic Individual Test", async function() {
         const emptyCauseForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: [],
+            causes: [],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -83,7 +83,7 @@ describe("Basic Individual Test", async function() {
         const invalidCauseForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Invalid Cause"],
+            causes: ["Invalid Cause"],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -94,7 +94,7 @@ describe("Basic Individual Test", async function() {
         const emptyZipForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "",
             skills: ["Cooking"],
             age: "18-30"
@@ -105,7 +105,7 @@ describe("Basic Individual Test", async function() {
         const invalidZipForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "920371",
             skills: ["Cooking"],
             age: "18-30"
@@ -116,7 +116,7 @@ describe("Basic Individual Test", async function() {
         const emptySkillsForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             skills: [],
             age: "18-30"
@@ -127,7 +127,7 @@ describe("Basic Individual Test", async function() {
         const emptyAgeForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             skills: ["Cooking"],
             age: ""
@@ -138,7 +138,7 @@ describe("Basic Individual Test", async function() {
         const invalidAgeForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             skills: ["Cooking"],
             age: "20-295837"
@@ -149,7 +149,7 @@ describe("Basic Individual Test", async function() {
         const validForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -172,7 +172,7 @@ describe("Basic Individual Test", async function() {
         const validForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             skills: ["Cooking"],
             age: "18-30"
@@ -195,7 +195,7 @@ describe("Basic Individual Test", async function() {
         const updatedForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122",
             skills: ["Cooking"],
             age: "18-30"
@@ -230,7 +230,7 @@ describe("Basic Individual Test", async function() {
         const testAuthForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122",
             skills: ["Cooking"],
             age: "18-30"
@@ -313,7 +313,7 @@ describe("Basic Individual Test", async function() {
         const testOrgForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",
@@ -323,7 +323,7 @@ describe("Basic Individual Test", async function() {
         const testUpdatedForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037", // we updated the zip
             skills: ["Cooking"],
             age: "18-30"

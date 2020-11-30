@@ -92,7 +92,7 @@ describe("Basic Events Test", async function() {
         const validOrgform = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",

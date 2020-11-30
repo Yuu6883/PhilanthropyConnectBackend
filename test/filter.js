@@ -3,7 +3,6 @@ const runner = require("./setup/runner");
 const fetch = require("node-fetch");
 const Joi = require("joi");
 const { validCauses, validSkills } = require("../src/constants");
-const { get } = require("http");
 
 describe("Basic Search Filter Test", async function() {
 
@@ -25,7 +24,7 @@ describe("Basic Search Filter Test", async function() {
      *             or search specified skills
      * 
      * Optional Parameters:
-     * - causes: Causes to search for (Array of valid cause strings)
+     * - causes: Causes to search for (Array of valid causes strings)
      * - skills: Skills to search for (Array of valid skill strings)
      * - distance: Radius area to search within  (Integer, in miles)
      */
@@ -91,7 +90,7 @@ describe("Basic Search Filter Test", async function() {
         res = schema.validate(noMySkills);
         assert(!!(res.error || res.errors), "MySkills should be a required field");
 
-        // Invalid cause
+        // Invalid causes
         const badCause = {
             myCauses: true,
             causes: ["badcause"], 
@@ -100,7 +99,7 @@ describe("Basic Search Filter Test", async function() {
             distance: 50
         }
         res = schema.validate(badCause);
-        assert(!!(res.error || res.errors), "Bad cause should not validate");
+        assert(!!(res.error || res.errors), "Bad causes should not validate");
 
         // Invalid skills
         const badSkill = {
@@ -189,7 +188,7 @@ describe("Basic Search Filter Test", async function() {
         let orgForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -206,7 +205,7 @@ describe("Basic Search Filter Test", async function() {
         orgForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: ["Food"],
+            causes: ["Food"],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -223,7 +222,7 @@ describe("Basic Search Filter Test", async function() {
         orgForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: ["Environment"],
+            causes: ["Environment"],
             zip: "93722",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -240,7 +239,7 @@ describe("Basic Search Filter Test", async function() {
         orgForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -257,7 +256,7 @@ describe("Basic Search Filter Test", async function() {
         orgForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: ["Food"],
+            causes: ["Food"],
             zip: "93722",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -275,7 +274,7 @@ describe("Basic Search Filter Test", async function() {
         const userForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122",
             skills: ["Cooking"],
             age: "18-30"
@@ -349,7 +348,7 @@ describe("Basic Search Filter Test", async function() {
         // Filter by multiple skills or multiple causes
         // Filter by myCauses (distance will be large enough to not matter)
         // Filter by mySkills
-        // Filter by default functionality (no distance skill or cause specified)
+        // Filter by default functionality (no distance skill or causes specified)
         
         // Delete all created test profiles and events
         await app.db.inds.delete(testPayload.uid);

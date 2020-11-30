@@ -15,7 +15,7 @@ describe("Feed Test", async function() {
         const validOrgform1 = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -29,7 +29,7 @@ describe("Feed Test", async function() {
         const validOrgform2 = {
             title: "Branson Foundation",
             mission: "Spreading the love for green",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@branson.org",
             url: "branson.org",
@@ -43,7 +43,7 @@ describe("Feed Test", async function() {
         const validOrgform3 = {
             title: "Vivian Foundation",
             mission: "Giving spaghetti to all people with spaghetti code",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@vivian.org",
             url: "vivian.org",
@@ -63,7 +63,7 @@ describe("Feed Test", async function() {
         const validIndiform = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Disaster Response"],
+            causes: ["Disaster Response"],
             zip: "92037",
             skills: ["exampleSkill"],
             age: "20-29"
@@ -93,7 +93,7 @@ describe("Feed Test", async function() {
         const validOrgform = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",

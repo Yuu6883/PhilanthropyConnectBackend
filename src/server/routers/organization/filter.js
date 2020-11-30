@@ -10,47 +10,34 @@ module.exports = {
     path: "/organization/filter",
     handler: async function (req, res) {
         // Design use case 3.1 - 3.3
-        // /api/organizations/filter?=["filter1","filter2","etc"]
+        // /api/organizations/filter?skills=["filter1","filter2","etc"]&causes=[]
+    
+        // Query individual db for user location
+        const userDoc = await this.db.inds.byID(req.payload.uid);
+        if (!userDoc.exists) return res.sendStatus(400);
+        const user = userDoc.data();
         
-        // Get the JSON object from URL
-        let decodedFilter = JSON.parse(decodeURIComponent(req._parsedUrl.query.substring(1)));
-
         /**
-         * @type {Joi.ObjectSchema} 
+         * @type {Joi.ObjectSchema<FilterOptions>} 
          * Format the frontend follows when sending a request
          * to this endpoint
          */
         const schema = Joi.object({
-
-            // User calling from Causes or My Causes
-            myCauses: Joi.boolean()
-                .required(),
-            
-            // User wants to use the skills listed on their profile
-            mySkills: Joi.boolean()
-                .required(),
-
             // User queries for causes
             causes: Joi.array().items(
                 Joi.string()
                     .valid(...validCauses)
+                    .default(user.causes)
             ),
-            
             // User queries for skills
             skills: Joi.array().items( 
                 Joi.string()
                     .valid(...validSkills)
+                    .default(user.skills)
             ),
-
             // User queries for distance in miles
             distance: Joi.number()
         });
-
-        // Query individual db for user location
-        let user = (await this.db.inds.byID(req.payload.uid));
-        if (!user.exists) return res.sendStatus(403);
-        user = user.data();
-        
 
         // Validate the filter query
         const validatedForm = schema.validate(decodedFilter);
@@ -67,7 +54,7 @@ module.exports = {
 
         // Query db for causes
         let result      = [];
-        let query       = await this.db.orgs.ref.where("cause", "array-contains-any", causesQuery)
+        let query       = await this.db.orgs.ref.where("causes", "array-contains-any", causesQuery)
             .get()
             .then(_ = (querySnapshot) => {
                 querySnapshot.forEach(_ = (doc) => {
@@ -86,7 +73,7 @@ module.exports = {
             let retval = false;
             let eventQuery = await Promise.all(org.events.map(id => this.db.events.byID(id)));
             let orgEvents = eventQuery.map(i => i.data());
-            for(id of orgEvents) {
+            for(const id of orgEvents) {
                 if(skillsQuery.some(i => id.skills.includes(i))) {
                     retval = true;
                     break;

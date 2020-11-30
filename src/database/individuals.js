@@ -19,10 +19,10 @@ const schema = Joi.object({
         .min(2)
         .max(40)
         .required(),
-    cause: Joi.array().items(
+    causes: Joi.array().items(
         Joi.string()
             .valid(...validCauses)
-            .error(() => new Error("Invalid cause"))
+            .error(() => new Error("Invalid causes"))
     ),
     zip: Joi.string()
         .valid(...validZIPCodes)

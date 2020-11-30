@@ -16,7 +16,7 @@ describe("Basic Organization Test", async function() {
         const emptyTitle = {
             title: "",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -28,7 +28,7 @@ describe("Basic Organization Test", async function() {
         const emptyMission = {
             title: "Yuh",
             mission: "",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -40,7 +40,7 @@ describe("Basic Organization Test", async function() {
         const emptyContact = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "",
             url: "yuh.org",
@@ -52,7 +52,7 @@ describe("Basic Organization Test", async function() {
         const emptyUrl = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "",
@@ -64,7 +64,7 @@ describe("Basic Organization Test", async function() {
         const validForm = {
             title: "Yuh",
             mission: "Fixing broken programmers",
-            cause: [],
+            causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
             url: "yuh.org",
@@ -89,7 +89,7 @@ describe("Basic Organization Test", async function() {
         const validForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",
@@ -113,7 +113,7 @@ describe("Basic Organization Test", async function() {
         const updatedForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122",
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",
@@ -148,7 +148,7 @@ describe("Basic Organization Test", async function() {
         const testAuthForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",
@@ -233,7 +233,7 @@ describe("Basic Organization Test", async function() {
         const testIndiForm = {
             firstname: "Branson",
             lastname: "Beihl",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122",
             skills: ["Cooking"],
             age: "18-30"
@@ -242,7 +242,7 @@ describe("Basic Organization Test", async function() {
         const testUpdatedForm = {
             title: "Habitat For Humanity",
             mission: "Fixing homelessness one family at a time",
-            cause: ["Medical"],
+            causes: ["Medical"],
             zip: "92122", // zip is updated
             contact: "info@sandiegohabitat.org",
             url: "www.sandiegohabitat.org",

@@ -13,7 +13,7 @@ const schema = Joi.object({
         .required(),
     mission: Joi.string()
         .required(),
-    cause: Joi.array().items(
+    causes: Joi.array().items(
         Joi.string()
             .valid(...validCauses)
     ),
