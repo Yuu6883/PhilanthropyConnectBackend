@@ -12,6 +12,9 @@ module.exports = {
         // Design use case 3.1 - 3.3
         // /api/organizations/filter?=["filter1","filter2","etc"]
         
+        // Get the JSON object from URL
+        const decodedFilter = JSON.parse(decodeURIComponent(req._parsedUrl.query.substring(1)));
+
         /**
          * @type {Joi.ObjectSchema} 
          * Format the frontend follows when sending a request
@@ -23,16 +26,16 @@ module.exports = {
             followed: Joi.boolean()
                 .required(),
             
+            // User wants to use the skills listed on their profile
+            mySkills: Joi.boolean()
+                .required(),
+
             // User queries for causes
             causes: Joi.array().items(
                 Joi.string()
                     .valid(...validCauses)
             ),
-
-            // User wants to use the skills listed on their profile
-            mySkills: Joi.boolean()
-                .required(),
-
+            
             // User queries for skills
             skills: Joi.array().items( 
                 Joi.string()
@@ -50,15 +53,15 @@ module.exports = {
         
 
         // Validate the filter query
-        const validatedForm = schema.validate(req.query);
+        const validatedForm = schema.validate(decodedFilter);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
         
         // Query only within followed orgs
-        if (req.query.followed) {
+        if (decodedFilter.followed) {
             // Query parameters: Defaults to all valid filters if parameter is empty
-            const causesQuery = req.query.causes.length ? req.query.causes : validCauses;
-            const skillsQuery = req.query.mySkills ? user.skills : req.query.skills ? req.query.skills : validSkills;
-            const distQuery   = req.query.distance ? req.query.distance * 1.609 : 50 * 1.609;
+            const causesQuery = decodedFilter.causes.length ? decodedFilter.causes : validCauses;
+            const skillsQuery = decodedFilter.mySkills ? user.skills : decodedFilter.skills ? decodedFilter.skills : validSkills;
+            const distQuery   = decodedFilter.distance ? decodedFilter.distance * 1.609 : 50 * 1.609;
 
             // Query db for all followed organizations and filter it based on given filters
             const query       = await Promise.all(user.following.map(id => this.db.orgs.byID(id)));
@@ -109,9 +112,9 @@ module.exports = {
         // User is calling for all organizations
         } else {
             // Query parameters: Defaults to all valid filters if parameter is empty
-            const causesQuery = req.query.causes.length ? req.query.causes : validCauses;
-            const skillsQuery = req.query.mySkills ? user.skills : req.query.skills ? req.query.skills : validSkills;
-            const distQuery   = req.query.distance ? req.query.distance * 1.609 : 50 * 1.609;
+            const causesQuery = decodedFilter.causes.length ? decodedFilter.causes : validCauses;
+            const skillsQuery = decodedFilter.mySkills ? user.skills : decodedFilter.skills ? decodedFilter.skills : validSkills;
+            const distQuery   = decodedFilter.distance ? decodedFilter.distance * 1.609 : 50 * 1.609;
 
             // Query db for causes
             const query       = this.db.orgs.where("causes", "array-contains-any", causesQuery);
