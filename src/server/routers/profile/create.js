@@ -8,7 +8,7 @@ module.exports = {
         const type = req.query.type;
 
         if (await this.db.existsProfile(req.payload.uid)) {
-            return res.status(400).send({ error: "Profile already exists with the assoicated account" });
+            return res.status(400).send({ error: "Profile already exists with the associated account" });
         }
 
         const db = { "individual": this.db.inds, "organization": this.db.orgs }[type];
