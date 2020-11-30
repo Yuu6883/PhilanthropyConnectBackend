@@ -10,13 +10,16 @@ describe("Basic Search Filter Test", async function() {
     const app = await runner();
     
     after(async () => await app.stop());
+
+    let orgIDs = [];
+    let eventIDs = [];
     
     /**
      * Testing filter form validity:
      * EXPECTED BEHAVIOR:
      * 
      * Required parameters:
-     * - followed: Boolean signifying whether to filter followed orgs
+     * - myCauses: Boolean signifying whether to filter followed orgs
      *             or all orgs
      * - mySkills: Boolean signifying whether to filter using user skills
      *             or search specified skills
@@ -38,7 +41,7 @@ describe("Basic Search Filter Test", async function() {
         const schema = Joi.object({
 
             // User calling from Causes or My Causes
-            followed: Joi.boolean()
+            myCauses: Joi.boolean()
                 .required(),
             
             // User queries for causes
@@ -68,7 +71,7 @@ describe("Basic Search Filter Test", async function() {
 
         // No followed
         const noFollowed = {
-            followed: null,
+            myCauses: null,
             causes: [], 
             mySkills: true,
             skills: [],
@@ -79,7 +82,7 @@ describe("Basic Search Filter Test", async function() {
 
         // No mySkills
         const noMySkills = {
-            followed: true,
+            myCauses: true,
             causes: [], 
             mySkills: null,
             skills: [],
@@ -90,7 +93,7 @@ describe("Basic Search Filter Test", async function() {
 
         // Invalid cause
         const badCause = {
-            followed: true,
+            myCauses: true,
             causes: ["badcause"], 
             mySkills: true,
             skills: [],
@@ -101,7 +104,7 @@ describe("Basic Search Filter Test", async function() {
 
         // Invalid skills
         const badSkill = {
-            followed: true,
+            myCauses: true,
             causes: [], 
             mySkills: true,
             skills: ["badskill"],
@@ -112,7 +115,7 @@ describe("Basic Search Filter Test", async function() {
 
         // Invalid distance
         const badDist = {
-            followed: true,
+            myCauses: true,
             causes: [], 
             mySkills: true,
             skills: [],
@@ -123,7 +126,7 @@ describe("Basic Search Filter Test", async function() {
 
         // Valid form
         const validForm = {
-            followed: true,
+            myCauses: true,
             causes: ["Education"], 
             mySkills: true,
             skills: ["Cooking"],
@@ -133,44 +136,224 @@ describe("Basic Search Filter Test", async function() {
         assert(!(res.error || res.errors), "Form should be good");
     });
 
-    it("Followed Causes filter test", async() => {
+    it("Filter endpoint test", async() => {
         // Invalid user
-        const testPayload = app.testPayload = {
-            "uid": `indi-test-${Date.now()}`,
+        let testPayload = app.testPayload = {
+            "uid": `FC filter test`,
             "name": "Branson Beihl",
             "picture": "",
             "email": "example@ucsd.edu",
             "emailVerified": true
         };
-        let res = await fetch(`http://localhost:${app.config.port}/api/organization/filter?=followed=true&mySkills=true`, {
-            method: "GET",
 
+        const validForm = {
+            myCauses: true,
+            causes: ["Education"], 
+            mySkills: true,
+            skills: ["Cooking"],
+            distance: 50
+        }
+
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/filter?=${encodeURIComponent(JSON.stringify(validForm))}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
         });
+        
         assert(res.status == 403, `Calling filter from a nonexistent user should return 403 instead of ${res.status}`);
 
         // Set up a sample database to filter through
+        // Should be one individual and around 10 organizations (each meeting different search constraints), 5 events to be used multiple times
+
+        // Create the events we will use
+        let eventForm = {
+                title: "Brush with Kindness",
+                details: "Help volunteer painting homes of those who can't do it themselves.",
+                zip: "92037",
+                skills: ["Art skills"],
+                date: Date.now()
+        };
+        let docToInsert = app.db.events.formToDocument(eventForm);
+        eventIDs.push((await app.db.events.insert(docToInsert)).id);
+
+        eventForm = {
+            title: "Brush with Kindness",
+            details: "Help volunteer painting homes of those who can't do it themselves.",
+            zip: "92037",
+            skills: ["Cooking"],
+            date: Date.now()
+        };
+        docToInsert = app.db.events.formToDocument(eventForm);
+        eventIDs.push((await app.db.events.insert(docToInsert)).id);
+
+        // Create the organizations we will search for
+        let orgForm = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: ["Medical"],
+            zip: "92037",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: [eventIDs[0]]
+        };
+        app.testPayload.uid = "Filter Test 1";
+        orgIDs.push(app.testPayload.uid);
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orgForm)
+        });
+
+        orgForm = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: ["Food"],
+            zip: "92037",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: [eventIDs[0]]
+        };
+        app.testPayload.uid = "Filter Test 2";
+        orgIDs.push(app.testPayload.uid);
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orgForm)
+        });
+
+        orgForm = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: ["Environment"],
+            zip: "93722",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: [eventIDs[1]]
+        };
+        app.testPayload.uid = "Filter Test 3";
+        orgIDs.push(app.testPayload.uid);
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orgForm)
+        });
+
+        orgForm = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: ["Medical"],
+            zip: "92037",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: [eventIDs[0]]
+        };
+        app.testPayload.uid = "Filter Test 4";
+        orgIDs.push(app.testPayload.uid);
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orgForm)
+        });
+
+        orgForm = {
+            title: "Yuh",
+            mission: "Fixing broken programmers",
+            cause: ["Food"],
+            zip: "93722",
+            contact: "testemail@brokenprogrammers.org",
+            url: "yuh.org",
+            events: [eventIDs[0]]
+        };
+        app.testPayload.uid = "Filter Test 5";
+        orgIDs.push(app.testPayload.uid);
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=organization`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(orgForm)
+        });
+
+        // Frontend form to create
+        const userForm = {
+            firstname: "Branson",
+            lastname: "Beihl",
+            cause: ["Medical"],
+            zip: "92122",
+            skills: ["Cooking"],
+            age: "18-30"
+        };
+        app.testPayload.uid = "Filter Endpoint User 1";
+        // Create the individual who we are searching with
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/create?type=individual`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userForm)
+        });
+
+        res = await fetch(`http://localhost:${app.config.port}/api/profile/${testPayload.uid}`), {
+            method: "GET", 
+            headers: { "Content-Type": "application/json" }
+        }
+        
         
         // TESTS:
         // Filter by distance only
-        // Filter by skills only
-        // Filter by causes only
+        const distForm = {
+            myCauses: false,
+            causes: [], 
+            mySkills: false,
+            skills: [],
+            distance: 100
+        }
+
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/filter?=${encodeURIComponent(JSON.stringify(distForm))}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        let result = await res.json();
+        //console.log(result.body);
+        assert(result.body.length == 3, "We should only have 3 results");
+
+        // Filter by skills only (distance will be large enough to not matter)
+        const skillForm = {
+            myCauses: false,
+            mySkills: false,
+            skills: ["Art skills"],
+            distance: 1000
+        }
+
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/filter?=${encodeURIComponent(JSON.stringify(skillForm))}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        result = await res.json();
+        assert(result.body.length == 4, "We should only have 4 results");
+        
+
+        // Filter by causes only (skills empty, distance large enough)
+        const causeForm = {
+            myCauses: false,
+            causes: ["Food"], 
+            mySkills: false,
+            skills: [],
+            distance: 5000
+        }
+
+        res = await fetch(`http://localhost:${app.config.port}/api/organization/filter?=${encodeURIComponent(JSON.stringify(causeForm))}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        result = await res.json();
+        //console.log(result)
+        assert(result.body.length == 2, "We should only have 2 results");
+
         // Filter by two or more filters (multiple tests)
         // Filter by multiple skills or multiple causes
+        // Filter by myCauses (distance will be large enough to not matter)
+        // Filter by mySkills
         // Filter by default functionality (no distance skill or cause specified)
-
-    });
-
-    it("All Causes filter test", async() => {
-        // Set up a sample database to filter through
-
-        // TESTS:
-        // Filter by distance only
-        // Filter by skills only
-        // Filter by causes only
-        // Filter by two or more filters (multiple tests)
-        // Filter by multiple skills or multiple causes
-        // Filter by default functionality (no distance skill or cause specified)
-
-        // Clear sample database initialized in Followed Causes to conclude test
+        
+        // Delete all created test profiles and events
+        await app.db.inds.delete(testPayload.uid);
+        await Promise.all(orgIDs.map(id => app.db.orgs.delete(id)));
+        await Promise.all(eventIDs.map(id => app.db.events.delete(id)));
     });
 });
