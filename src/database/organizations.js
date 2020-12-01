@@ -112,6 +112,26 @@ class Organizations extends Template {
     }
 
     /**
+     * @param {string} org organization id
+     * @param {string} id event id
+     */
+    addEvent(org, id) {
+        return this.ref.doc(org).update({
+            events: firestore.FieldValue.arrayUnion(id)
+        });
+    }
+
+    /**
+     * @param {string} org organization id
+     * @param {string} id event id
+     */
+    removeEvent(org, id) {
+        return this.ref.doc(org).update({
+            events: firestore.FieldValue.arrayRemove(id)
+        });
+    }
+
+    /**
      * @param {IndividualDocument} indi 
      * @param {number} radius 
      * @return {Promise<FirebaseFirestore.QuerySnapshot<D>>}
