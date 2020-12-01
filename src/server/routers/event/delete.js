@@ -9,6 +9,6 @@ module.exports = {
         if (!eventDoc.exists) return res.sendStatus(404);
         if (eventDoc.data().owner != req.payload.uid) return res.sendStatus(401);
         await eventDoc.ref.delete();
-        return res.send({ success: true });
+        return res.sendStatus(200);
     }
 }

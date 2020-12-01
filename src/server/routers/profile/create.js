@@ -25,6 +25,6 @@ module.exports = {
         doc.picture = req.payload.picture || "";
 
         await db.insert(doc);
-        return res.send({ success: true });
+        return res.sendStatus(200);
     }
 }

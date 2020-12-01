@@ -24,7 +24,7 @@ module.exports = {
 
         try {
             await db.update(req.payload.uid, doc);
-            return res.send({ success: true });
+            return res.sendStatus(200);
         } catch (e) {
             // uid doesn't exist
             return res.sendStatus(404);

@@ -25,9 +25,8 @@ const schema = Joi.object({
             .error(() => new Error("Invalid causes"))
     ),
     zip: Joi.string()
-        .valid(...validZIPCodes)
         .required()
-        .error(() => new Error("Invalid US zip code")),
+        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
     skills: Joi.array().items(
         Joi.string()
             .valid(...validSkills)

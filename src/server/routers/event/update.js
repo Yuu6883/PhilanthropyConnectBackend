@@ -20,7 +20,7 @@ module.exports = {
 
         try {
             await eventDoc.ref.update(docToUpdate);
-            res.send({ success: true });
+            res.sendStatus(200);
         } catch (e) {
             res.sendStatus(500);
         }

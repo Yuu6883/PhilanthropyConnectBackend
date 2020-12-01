@@ -45,12 +45,13 @@ declare type OrganizationForm = {
     zip:     string;
     contact: string;
     url: string;
-    events: string[];
 }
 
 declare type OrganizationDocument = {
     email:     string;
     picture:   string;
+    location:  FirebaseFirestore.GeoPoint;
+    events:    string[];
     ratings:   string[];
     followers: string[];
 } & OrganizationForm & ID;
@@ -82,5 +83,7 @@ declare type FilterOptions = {
     skills:   string[];
     distance: number;
 }
+
+declare type DatabaseNames = "inds"|"orgs"|"ratings"|"events";
 
 // Add more types as you need

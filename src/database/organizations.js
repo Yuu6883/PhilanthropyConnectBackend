@@ -1,11 +1,12 @@
 const Template = require("./template");
-const ZIP = require("../modules/us-zip");
+const ZIPCodes = require("../modules/us-zip");
 const Joi = require("joi");
 const firestore = require("@google-cloud/firestore");
 
 const { validCauses } = require("../constants");
+const { GeoPoint } = require("@google-cloud/firestore");
 
-const validZIP = ZIP.map.keys();
+const validZIP = ZIPCodes.map.keys();
 
 /** @type {Joi.ObjectSchema<OrganizationForm>} */
 const schema = Joi.object({
@@ -18,9 +19,8 @@ const schema = Joi.object({
             .valid(...validCauses)
     ),
     zip: Joi.string()
-        .valid(...validZIP)
         .required()
-        .error(() => new Error("Invalid US zip code")),
+        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
     contact: Joi.string()
         .required(),
     url: Joi.string()
@@ -57,6 +57,10 @@ class Organizations extends Template {
         doc.picture = "";
         doc.ratings = doc.ratings || [];
         doc.followers = doc.followers || [];
+        
+        const point = ZIPCodes.map.get(doc.zip);
+        doc.location = new GeoPoint(...point);
+
         return doc;
     }
 
