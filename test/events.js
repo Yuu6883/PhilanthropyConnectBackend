@@ -119,7 +119,7 @@ describe("Basic Events Test", async function() {
 
         // Create endpoint tests
         /** @type {Response} */
-        let res = await fetch(`http://localhost:${app.config.port}/api/events/create/${testOrgID}`, {
+        let res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(testEventForm)
