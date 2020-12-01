@@ -17,40 +17,42 @@ module.exports = {
         if (!db) return res.sendStatus(400);
 
         // If db is individual: send back array of following org's events' documents
-        if (db == Individual) {
+        if (type == "individual") {
 
             // Get list of following orgs
             const indi = await this.db.inds.byID(req.payload.uid);
-            if (!indi.exists) return res.sendStatus(403);
+            if (!indi.exists) return res.sendStatus(400);
             const indiDoc = indi.data();
 
             // Map the org id's to their document
             const query = await Promise.all(indiDoc.following.map(id => this.db.orgs.byID(id)));
-            let followedOrgs  = query.map(org => org.data());
+            const followedOrgs = query.map(org => org.data());
 
             /** @type {OrgEventDocument[]} */
-            const allEvents = [];  // all events from followed orgs
+            let allEvents = [];  // all events from followed orgs
             
             // For each org, add their events to final allEvents array
-            for (orgDoc in followedOrgs) {
+            for (const orgDoc of followedOrgs) {
   
                 const events = await Promise.all(orgDoc.events.map(id => this.db.events.byID(id)));
-                let eventDocs  = events.map(org => org.data());
+                const eventDocs  = events.map(org => org.data());
                 
-                allEvents = allEvents || eventDocs;
+                allEvents = allEvents.concat(eventDocs);
             }
 
             // Sort OrgEventDocuments by date: lowest timestamp first
-            allEvents.sort(function(a, b) {return a.date - b.date});
+            allEvents
+                .filter(e => e.date > Date.now())
+                .sort((a, b) => a.date - b.date);
 
             // Get 50 most recent events from allEvents to send back as response
-            res.send(allEvents.slice(0, 49));
+            res.send(allEvents.slice(0, 50));
 
         // If db is org: send back array of their own events' documents
-        } else if (db == Organizations) {
+        } else if (type == "organization") {
 
             const org = await this.db.orgs.byID(req.payload.uid);
-            if (!org.exists) return res.sendStatus(403);
+            if (!org.exists) return res.sendStatus(400);
             const orgDoc = org.data();
 
             const events = await Promise.all(orgDoc.events.map(id => this.db.events.byID(id)));

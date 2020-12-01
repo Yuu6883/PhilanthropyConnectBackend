@@ -70,7 +70,7 @@ declare type OrgEventForm = {
     details:  string;
     zip:      string;
     skills:   string[];
-    date:     string;
+    date:     number;
 }
 
 declare type OrgEventDocument = {

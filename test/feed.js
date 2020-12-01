@@ -5,13 +5,43 @@ const fetch = require("node-fetch");
 describe("Feed Test", async function() {
 
     const app = await runner();
-    
-    after(async () => await app.stop());
+
+    const tempInserted = {
+        "inds": [],
+        "orgs": [],
+        "events": [],
+        "ratings": []
+    }
+
+    const cleanup = async () => {
+        for (const key in tempInserted) {
+            for (const id of tempInserted[key]) {
+                const success = await app.db[key].delete(id);
+                if (!success) console.log(`Failed to delete ${key}#${id}`);
+            }
+        }
+    };
+
+    /** 
+     * @param {DatabaseNames} dbName 
+     * @param {F} form
+     * @param {string} id
+     */
+    const insert = async (dbName, form, id) => {
+        const db = app.db[dbName];
+        const doc = db.formToDocument(form);
+        if (id) doc.id = id;
+        const ref = await db.insert(doc);
+        // console.log(`Inserted ${dbName}#${ref.id}`);
+        tempInserted[dbName].push(ref.id);
+        return ref;
+    }
+
+    after(async () => (await cleanup(), await app.stop()));
     
     it("Individual Feed Test", async() => {
 
         // Insert 3 orgs: damn bruh this aint sustainable
-        const testOrgID1 = `test-org-${Date.now()}`;
         const validOrgform1 = {
             title: "Yuh",
             mission: "Fixing broken programmers",
@@ -21,11 +51,8 @@ describe("Feed Test", async function() {
             url: "yuh.org",
             events: []
         };
-        let orgDoc = app.db.orgs.formToDocument(validOrgform1);
-        orgDoc.id = testOrgID1;
-        await app.db.orgs.insert(orgDoc);
+        await insert("orgs", validOrgform1, `test-org-1-${Date.now()}`);
 
-        const testOrgID2 = `test-org-${Date.now()}`;
         const validOrgform2 = {
             title: "Branson Foundation",
             mission: "Spreading the love for green",
@@ -35,11 +62,8 @@ describe("Feed Test", async function() {
             url: "branson.org",
             events: []
         };
-        orgDoc = app.db.orgs.formToDocument(validOrgform2);
-        orgDoc.id = testOrgID2;
-        await app.db.orgs.insert(orgDoc);
+        await insert("orgs", validOrgform2, `test-org-2-${Date.now()}`);
 
-        const testOrgID3 = `test-org-${Date.now()}`;
         const validOrgform3 = {
             title: "Vivian Foundation",
             mission: "Giving spaghetti to all people with spaghetti code",
@@ -49,9 +73,7 @@ describe("Feed Test", async function() {
             url: "vivian.org",
             events: []
         };
-        orgDoc = app.db.orgs.formToDocument(validOrgform3);
-        orgDoc.id = testOrgID3;
-        await app.db.orgs.insert(orgDoc);
+        await insert("orgs", validOrgform3, `test-org-3-${Date.now()}`);
 
         // TODO: Insert 1 event each
 
@@ -59,7 +81,6 @@ describe("Feed Test", async function() {
 
 
         // Insert individual
-        const testIndiID = `test-indi-${Date.now()}`;
         const validIndiform = {
             firstname: "Branson",
             lastname: "Beihl",
@@ -68,28 +89,16 @@ describe("Feed Test", async function() {
             skills: ["exampleSkill"],
             age: "20-29"
         };
-        let indiDoc = app.db.inds.formToDocument(validIndiform);
-        indiDoc.id = testIndiID;
-        await app.db.inds.insert(indiDoc);
+        await insert("inds", validIndiform, `test-indi-${Date.now()}`);
 
         // TODO: Make individual follow the orgs
 
         // TODO: Test GET request from individual to their feed
-
-        // Delete org, events, and individual
-        await app.db.orgs.delete(testOrgID1);
-        await app.db.orgs.delete(testOrgID2);
-        await app.db.orgs.delete(testOrgID3);
-        //await app.db.events.delete(testEventID1);
-        //await app.db.events.delete(testEventID2);
-        //await app.db.events.delete(testEventID3);
-        await app.db.inds.delete(testIndiID);
     });
 
     it("Org Feed Test", async() => {
 
         // Insert org
-        const testOrgID = `test-org-${Date.now()}`;
         const validOrgform = {
             title: "Yuh",
             mission: "Fixing broken programmers",
@@ -99,19 +108,10 @@ describe("Feed Test", async function() {
             url: "yuh.org",
             events: []
         };
-        let orgDoc = app.db.orgs.formToDocument(validOrgform);
-        orgDoc.id = testOrgID;
-        await app.db.orgs.insert(orgDoc);
-
+        await insert("orgs", validOrgform, `test-org-${Date.now()}`);
         // TODO: Insert 1 event each
 
         // TODO: Test GET request from organization to their feed
-
-        // Delete org and events
-        await app.db.orgs.delete(testOrgID);
-        //await app.db.events.delete(testEventID1);
-        //await app.db.events.delete(testEventID2);
-        //await app.db.events.delete(testEventID3);
     });
 
 });
