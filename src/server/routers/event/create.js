@@ -1,7 +1,7 @@
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "post",
-    path: "/events/create",
+    path: "/events/create/:id", // id here is org id",
     handler: async function (req, res) {
 
         // Design use case 4.1
@@ -17,6 +17,14 @@ module.exports = {
         docToInsert.owner = req.payload.uid;
         const ref = await this.db.events.insert(docToInsert);
 
-        res.send({ success: true, id: ref.id });
+        // try to add event to org, if it exists
+        try {
+            await this.db.orgs.addEvent(req.params.id, ref.id);
+            res.send({ success: true, id: ref.id });
+        } catch (e) {
+            // Remove the event if we failed to add it to some org document
+            await ref.delete().catch(() => {});
+            res.sendStatus(404);
+        }
     }
 }

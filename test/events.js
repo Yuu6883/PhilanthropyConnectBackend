@@ -119,7 +119,7 @@ describe("Basic Events Test", async function() {
 
         // Create endpoint tests
         /** @type {Response} */
-        let res = await fetch(`http://localhost:${app.config.port}/api/events/create`, {
+        let res = await fetch(`http://localhost:${app.config.port}/api/events/create/${testOrgID}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(testEventForm)
@@ -132,6 +132,9 @@ describe("Basic Events Test", async function() {
         
         const data = (await app.db.events.byID(eventID)).data();
         assert(data.owner == testOrgID, "Owner of event and test org ID should match");
+
+        let updatedDoc = (await app.db.orgs.byID(testOrgID)).data();
+        assert(updatedDoc.events.length == 1, "Org's event array should be populated");
 
         // Get endpoint
         res = await fetch(`http://localhost:${app.config.port}/api/events/${eventID}`, {
@@ -188,6 +191,9 @@ describe("Basic Events Test", async function() {
 
         // Delete org and event
         await app.db.events.delete(eventID);
+        updatedDoc = (await app.db.orgs.byID(testOrgID)).data();
+        assert(updatedDoc.events.length == 0, "Org's event array should be updated");
+
         await app.db.orgs.delete(testOrgID);
     });
 
