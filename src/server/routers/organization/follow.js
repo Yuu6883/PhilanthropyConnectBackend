@@ -7,21 +7,22 @@ module.exports = {
         // /organizations/id?follow=[true/false]
         const type = req.query.follow;
         
+        // validate it's a individual user in req.payload.uid
+        const indi = await this.db.inds.byID(req.payload.uid);
+        if (!indi.exists) return res.sendStatus(401);
         // validate organization exists from req.params.id
         const org = await this.db.orgs.byID(req.params.id);
-        if (!org.exists) return res.sendStatus(400);
-        const orgDoc = org.data();
-        // validate it's a individual user in req.payload.uid
-        const follower = await this.db.inds.byID(req.payload.uid);
-        if (!follower.exists) return res.sendStatus(401);
-        // call addFollower
-        if(type) {
-            await this.db.orgs.addFollower(org, follower);
-        } else {
-            await this.db.orgs.removeFollower(org, follower);
-        }    
-        // done!!
+        if (!org.exists) return res.sendStatus(404);
         
-        // TODO: follow/unfollow organization
+        // call addFollower
+        if (type == "true") {
+            await this.db.inds.follow(indi.id, org.id);
+            await this.db.orgs.addFollower(org.id, indi.id);
+            res.sendStatus(200);
+        } else if (type == "false") {
+            await this.db.inds.unfollow(indi.id, org.id);
+            await this.db.orgs.removeFollower(org.id, indi.id);
+            res.sendStatus(200);
+        } else return res.sendStatus(400);
     }
 }
