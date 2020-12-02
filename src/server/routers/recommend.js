@@ -1,5 +1,13 @@
 const { GeoPoint } = require("@google-cloud/firestore");
 const { isPointWithinRadius, getBoundsOfDistance } = require("geolib");
+const follow = require("./organization/follow");
+
+
+/**
+ * @param {[]} arr1
+ * @param {[]} arr2
+ */
+const arrayIntersection = (arr1, arr2) => arr1.reduce((prev, curr) => prev += arr2.includes(curr) ? 1 : 0, 0);
 
 /** @type {APIEndpointHandler} */
 module.exports = {
@@ -29,14 +37,16 @@ module.exports = {
         const user = userDoc.data();
 
         // Filters: cause defaults to all followed org causes
-        const followedCauses = await Promise.all(user.following.map(id => this.db.orgs.get(id)));
+        const followedQuery = await Promise.all(user.following.map(id => this.db.orgs.byID(id)));
+        const followedCauses = type == "organization" ? [...new Set(followedQuery.map(r => r.data()).map(org => org.causes).flat())] : [];
 
         /** @type { FilterOptions } */
         const filters = {
-            causes: user.causes || [...new Set(followedCauses.map(org => org.causes))],
+            causes: user.causes.length ? user.causes : followedCauses,
             skills: user.skills || [],
             distance: 100
         }
+
         // Query db by distance
         const bounds = getBoundsOfDistance([user.location.longitude, user.location.latitude], filters.distance);
         const query = await db.ref
@@ -49,7 +59,7 @@ module.exports = {
             .map(snapshot => {
                 /** @type {OrgEventDocument|OrganizationDocument} */
                 const doc = snapshot.data();
-                const followingField = {"events": doc.owner, "organization": doc.id }[type];
+                const followingField = {"events": doc.owner, "organization": snapshot.id }[type];
                 // console.log(`doc[${matchField}] = ${doc[matchField]}, filters[${matchField}] = ${filters[matchField]}`);
                 return {
                     matches: arrayIntersection(doc[matchField], filters[matchField]), 
