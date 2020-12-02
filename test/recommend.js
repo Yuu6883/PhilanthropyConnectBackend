@@ -321,7 +321,6 @@ describe("Basic Recommend Test", async function() {
             headers: { "Content-Type": "application/json" }
         });
         jsonRes = await res.json();
-        console.log(jsonRes)
         assert(jsonRes.length == 1 && 
                jsonRes[0].title == "Brush with Kindness", 
                "User updated profile");
