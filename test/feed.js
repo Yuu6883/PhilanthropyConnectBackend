@@ -135,11 +135,6 @@ describe("Feed Test", async function() {
         await insert("inds", validIndiform, testPayload.uid);
 
         // Make individual follow the orgs
-        /** @type {Response} */
-        /*let res = await fetch(`http://localhost:${app.config.port}/api/organization/${testPayload.uid}?follow=true`, {
-            method: "POST",
-        });
-        */
         app.db.inds.ref.doc(tempInserted["inds"][0]).update({
             following: firestore.FieldValue.arrayUnion(orgID1, orgID2, orgID3)
         });
