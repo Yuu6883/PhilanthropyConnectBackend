@@ -18,7 +18,7 @@ describe("Feed Test", async function() {
         for (const key in tempInserted) {
             for (const id of tempInserted[key]) {
                 const success = await app.db[key].delete(id);
-                if (!success) console.log(`Failed to delete ${key}#${id}`);
+                // if (!success) console.log(`Failed to delete ${key}#${id}`);
             }
         }
     };
@@ -77,7 +77,6 @@ describe("Feed Test", async function() {
         await insert("orgs", validOrgform3, orgID3);
 
         // Insert 1 event to each org
-        const eventID1 = `event-test-1-${Date.now()}`;
         const eventForm1 = {
             title: "Programming Detox",
             details: "Help programming destress and heal",
@@ -85,11 +84,10 @@ describe("Feed Test", async function() {
             skills: ["Medical Skills"],
             date: Date.now()
         };
-        const event1 = await insert("events", eventForm1, eventID1);
+        const event1 = await insert("events", eventForm1);
         event1.owner = orgID1;
-        await app.db.orgs.addEvent(orgID1, eventID1);
+        await app.db.orgs.addEvent(orgID1, event1.id);
 
-        const eventID2 = `event-test-2-${Date.now()}`;
         const eventForm2 = {
             title: "Group Gardening",
             details: "Plant native vegetables in the local community garden!",
@@ -97,11 +95,10 @@ describe("Feed Test", async function() {
             skills: ["Caretaking"],
             date: Date.now()
         };
-        const event2 = await insert("events", eventForm2, eventID2);
+        const event2 = await insert("events", eventForm2);
         event2.owner = orgID2;
-        await app.db.orgs.addEvent(orgID2, eventID2);
+        await app.db.orgs.addEvent(orgID2, event2.id);
 
-        const eventID3 = `event-test-3-${Date.now()}`;
         const eventForm3 = {
             title: "Spaghetti Frenzy",
             details: "Help prepare bulk spaghetti!",
@@ -109,9 +106,9 @@ describe("Feed Test", async function() {
             skills: ["Cooking"],
             date: Date.now()
         };
-        const event3 = await insert("events", eventForm3, eventID3);
+        const event3 = await insert("events", eventForm3);
         event3.owner = orgID3;
-        await app.db.orgs.addEvent(orgID3, eventID3);
+        await app.db.orgs.addEvent(orgID3, event3.id);
 
         // Insert individual
         const testPayload = app.testPayload = {
@@ -121,6 +118,7 @@ describe("Feed Test", async function() {
             "email": "example@ucsd.edu",
             "emailVerified": true
         };
+
         const validIndiform = {
             firstname: "Branson",
             lastname: "Beihl",
@@ -132,33 +130,24 @@ describe("Feed Test", async function() {
         await insert("inds", validIndiform, testPayload.uid);
 
         // Make individual follow the orgs
-        app.db.inds.ref.doc(tempInserted["inds"][0]).update({
-            following: firestore.FieldValue.arrayUnion(orgID1, orgID2, orgID3)
-        });
-
-        app.db.orgs.ref.doc(tempInserted["orgs"][0]).update({
-            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
-        });
-
-        app.db.orgs.ref.doc(tempInserted["orgs"][1]).update({
-            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
-        });
-
-        app.db.orgs.ref.doc(tempInserted["orgs"][2]).update({
-            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
-        });
+        await app.db.inds.follow(testPayload.uid, orgID1);
+        await app.db.orgs.addFollower(orgID1, testPayload.uid);
+        await app.db.inds.follow(testPayload.uid, orgID2);
+        await app.db.orgs.addFollower(orgID2, testPayload.uid);
+        await app.db.inds.follow(testPayload.uid, orgID3);
+        await app.db.orgs.addFollower(orgID3, testPayload.uid);
 
         // Test GET request from individual to their event feed
-        let res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=individual`, {
-            method: "GET",
-        });
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=individual`);
 
         assert(res.status == 200, "Feed endpoint 200");
         let jsonRes = await res.json();
         assert(jsonRes.length == 3 &&
             jsonRes[0].title == "Programming Detox" &&
             jsonRes[1].title == "Group Gardening" &&
-            jsonRes[2].title == "Spaghetti Frenzy", "Individual's feed should work");
+            jsonRes[2].title == "Spaghetti Frenzy", `Individual's feed returns unexpected result: ${JSON.stringify(jsonRes, null, 4)}`);
+
+        await cleanup();
     });
 
     it("Org Feed Test", async() => {
@@ -230,5 +219,7 @@ describe("Feed Test", async function() {
             jsonRes[0].title == "Spaghetti Photoshoot" &&
             jsonRes[1].title == "Refactoring Spaghetti Code" &&
             jsonRes[2].title == "Spaghetti Frenzy", "Org's feed should work");
+        
+        await cleanup();
     });
 });

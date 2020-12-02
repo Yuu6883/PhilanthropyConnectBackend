@@ -17,7 +17,7 @@ describe("Basic Search Filter Test", async function() {
         for (const key in tempInserted) {
             for (const id of tempInserted[key]) {
                 const success = await app.db[key].delete(id);
-                if (!success) console.log(`Failed to delete ${key}#${id}`);
+                // if (!success) console.log(`Failed to delete ${key}#${id}`);
             }
         }
     };
@@ -96,6 +96,8 @@ describe("Basic Search Filter Test", async function() {
         assert(res.status == 200, `Filter endpoint ${res.status}`);
         let jsonRes = await res.json();
         assert(jsonRes[0].causes[0] == validFilters.causes[0], "Cause should match");
+
+        await cleanup();
     });
 
     
@@ -205,5 +207,7 @@ describe("Basic Search Filter Test", async function() {
         });
         jsonRes = await res.json();
         assert(jsonRes.length == 3, "Filters should work x3");
+
+        await cleanup();
     });
 });

@@ -4,6 +4,7 @@ const ZIPCodes = require("../modules/us-zip");
 const { validCauses, validSkills, ageCats } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
+const { firestore } = require("firebase-admin");
 
 /** @type {Joi.ObjectSchema<IndividualForm>} */
 const schema = Joi.object({
@@ -66,6 +67,18 @@ class Individual extends Template {
         doc.location = new GeoPoint(...point);
 
         return doc;
+    }
+
+    follow(id, orgID) {
+        return this.ref.doc(id).update({
+            following: firestore.FieldValue.arrayUnion(orgID)
+        });
+    }
+
+    unfollow(id, orgID) {
+        return this.ref.doc(id).update({
+            following: firestore.FieldValue.arrayRemove(orgID)
+        });
     }
 
     delete(id) {

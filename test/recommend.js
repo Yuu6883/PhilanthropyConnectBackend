@@ -18,7 +18,7 @@ describe("Basic Recommend Test", async function() {
         for (const key in tempInserted) {
             while (tempInserted[key].length) {
                 const success = await app.db[key].delete(tempInserted[key].pop());
-                if (!success) console.log(`Failed to delete ${key}#${id}`);
+                // if (!success) console.log(`Failed to delete ${key}#${id}`);
             }
         }
     };
@@ -342,5 +342,7 @@ describe("Basic Recommend Test", async function() {
         assert(jsonRes.length == 2 &&
             jsonRes[0].title == "CSE 110 Meetings" &&
             jsonRes[1].title == "Protest at Google", "Filters should work");
+
+        await cleanup();
     });
 });

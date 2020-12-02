@@ -9,12 +9,6 @@ const follow = require("./organization/follow");
  */
 const arrayIntersection = (arr1, arr2) => arr1.reduce((prev, curr) => prev += arr2.includes(curr) ? 1 : 0, 0);
 
-/**
- * @param {[]} arr1
- * @param {[]} arr2
- */
-const arrayIntersection = (arr1, arr2) => arr1.reduce((prev, curr) => prev += arr2.includes(curr) ? 1 : 0, 0);
-
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "get",
