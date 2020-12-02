@@ -1,6 +1,7 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
 const fetch = require("node-fetch");
+const { firestore } = require("firebase-admin");
 
 describe("Basic Recommend Test", async function() {
 
@@ -39,7 +40,7 @@ describe("Basic Recommend Test", async function() {
         return ref;
     }
 
-    it("Causes (orgs) filter endpoint test", async() => {
+    it("Causes (orgs) recommend endpoint test", async() => {
         const testPayload = app.testPayload = {
             "uid": `indi-test-${Date.now()}`,
             "name": "Branson Beihl",
@@ -61,12 +62,12 @@ describe("Basic Recommend Test", async function() {
 
         // Create the organizations we will search for
         const orgForm1 = {
-            title: "Yuh",
-            mission: "Fixing broken programmers",
+            title: "God Help Us All",
+            mission: "Praying the Rona Away",
             causes: ["Medical"],
             zip: "92037",
-            contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org"
+            contact: "essentialoils@ponzi.legit",
+            url: "totallynothighwayrobbery.xd"
         };
         await insert("orgs", orgForm1, `org-cause-test-1-${Date.now()}`);
         /** @type {OrganizationDocument} */
@@ -74,86 +75,181 @@ describe("Basic Recommend Test", async function() {
         // console.log(data1);
         
         const orgForm2 = {
-            title: "Yuh",
-            mission: "Fixing broken programmers",
+            title: "Tutors Pity Us Charity",
+            mission: "Obtaining a good grade",
             causes: ["Food"],
             zip: "92037",
-            contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org"
+            contact: "dubsforquaranteam@brokenprogrammers.moe",
+            url: "gibaplus.pls"
         };
         await insert("orgs", orgForm2, `org-cause-test-2-${Date.now()}`);
 
-        const validFilters = {
-            causes: ["Food"]
+        const orgForm3 = {
+            title: "Branson I don't feel so good",
+            mission: "Snapping 2020 away",
+            causes: ["Medical"],
+            zip: "92037",
+            contact: "thanos@retiredmcuvillains.gov",
+            url: "newhandmodel.abercrombie"
         };
+        await insert("orgs", orgForm3, `org-cause-test-3-${Date.now()}`);
 
+        const orgForm4 = {
+            title: "Suspicious Code",
+            mission: "Berating programmers for creating bugs",
+            causes: ["Food"],
+            zip: "92037",
+            contact: "redsus@among.us",
+            url: "spaghetti.code"
+        };
+        await insert("orgs", orgForm4, `org-cause-test-4-${Date.now()}`);
+
+        // TEST cause recommendation based on user.causes
         /** @type {Response} */
-        let res = await fetch(`http://localhost:${app.config.port}/api/filter?type=organization`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(validFilters)
+        let res = await fetch(`http://localhost:${app.config.port}/api/recommend?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
         });
         assert(res.status == 200, "Filter endpoint 200");
         let jsonRes = await res.json();
-        assert(jsonRes[0].causes[0] == validFilters.causes[0], "Cause should match");
+        assert(jsonRes[0].title == "God Help Us All" && 
+               jsonRes[1].title == "Branson I don't feel so good" &&
+               jsonRes.length == 2, "We should be going off of user causes for this test");
+
+        // Setup next test (following one should not show up)
+        await app.db.inds.ref.doc(tempInserted["inds"][0]).update({
+            following: firestore.FieldValue.arrayUnion(id)
+        });
+        await app.db.orgs.ref.doc(tempInserted["orgs"][0]).update({
+            followers: firestore.FieldValue.arrayUnion(id)
+        })
+
+        /** @type {Response} */
+        res = await fetch(`http://localhost:${app.config.port}/api/recommend?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, "Filter endpoint 200");
+        jsonRes = await res.json();
+        assert(jsonRes[0].title == "Branson I don't feel so good" && jsonRes.length == 1, "Cause should match");
+
+        // Setup next test (following one non user cause should do nothing to the search)
+        await app.db.inds.ref.doc(tempInserted["inds"][0]).update({
+            following: firestore.FieldValue.arrayUnion(id)
+        });
+        await app.db.orgs.ref.doc(tempInserted["orgs"][1]).update({
+            followers: firestore.FieldValue.arrayUnion(id)
+        })
+
+        /** @type {Response} */
+        res = await fetch(`http://localhost:${app.config.port}/api/recommend?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, "Filter endpoint 200");
+        jsonRes = await res.json();
+        assert(jsonRes[0].title == "Branson I don't feel so good" && 
+               jsonRes.length == 1, "Results should not have changed from prev test");
+        
+        // Setup next test (following with no user causes should recommend everything else in db)
+        await app.db.inds.ref.doc(tempInserted["inds"][0]).update({
+            causes: []
+        })
+
+        /** @type {Response} */
+        res = await fetch(`http://localhost:${app.config.port}/api/recommend?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, "Filter endpoint 200");
+        jsonRes = await res.json();
+        assert(jsonRes[0].title == "Branson I don't feel so good" && 
+               jsonRes[1].title == "Suspicious Code" && 
+               jsonRes.length == 2, "Results should include org3 and org4");
+
+        // Setup next test (an org out of distance range should not show in search)
+        const orgForm5 = {
+            title: "Definitely not interesting",
+            mission: "Not get in the next search",
+            causes: ["Food"],
+            zip: "10001",
+            contact: "hiders@lurk.ca",
+            url: "weasel.gg"
+        };
+        await insert("orgs", orgForm5, `org-cause-test-5-${Date.now()}`);
+
+        res = await fetch(`http://localhost:${app.config.port}/api/recommend?type=organization`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        });
+        assert(res.status == 200, "Filter endpoint 200");
+        jsonRes = await res.json();
+        assert(jsonRes[0].title == "Branson I don't feel so good" && 
+               jsonRes[1].title == "Suspicious Code" && 
+               jsonRes.length == 2, "Results should not include org1, 2, or 5");
     });
 
     
-    it("Skills (events) & distance filter endpoint test", async() => {
+    it("Skills (events) & distance recommend endpoint test", async() => {
 
         // Set up a sample database to filter through
         // Should be one individual and around 10 organizations (each meeting different search constraints), 5 events to be used multiple times
 
         // Create the events we will use
-        let eventForm = {
+        /** @type { OrgEventDocument } */
+        let eventDoc = {
             title: "Brush with Kindness",
             details: "Help volunteer painting homes of those who can't do it themselves.",
             zip: "92037",
             skills: ["Art skills"],
-            date: Date.now()
+            date: Date.now(),
         };
 
-        await insert("events", eventForm, `event-skills-test-1-${Date.now()}`);
+        await insert("events", eventDoc, `event-skills-test-1-${Date.now()}`);
 
-        eventForm = {
+        eventDoc = {
             title: "Protest at Google",
             details: "FIREBASE BAD",
             zip: "92037",
             skills: ["Programming"],
-            date: Date.now()
+            date: Date.now(),
+            owner: "o1"
         };
 
-        await insert("events", eventForm, `event-skills-test-2-${Date.now()}`);
+        await insert("events", eventDoc, `event-skills-test-2-${Date.now()}`);
 
-        eventForm = {
+        eventDoc = {
             title: "CSE 110 Meetings",
             details: "Help students of those who can't do it themselves.",
             zip: "92037",
             skills: ["Programming", "Engineering"],
-            date: Date.now()
+            date: Date.now(),
+            owner: "o1"
         };
 
-        await insert("events", eventForm, `event-skills-test-2-${Date.now()}`);
+        await insert("events", eventDoc, `event-skills-test-3-${Date.now()}`);
 
-        eventForm = {
+        eventDoc = {
             title: "MonkaS kitchen",
             details: "Feeding poor software developers who can't cook like me.",
             zip: "92037",
             skills: ["Cooking"],
-            date: Date.now()
+            date: Date.now(),
+            owner: "o2"
         };
 
-        await insert("events", eventForm, `event-skills-test-3-${Date.now()}`);
+        await insert("events", eventDoc, `event-skills-test-4-${Date.now()}`);
 
-        eventForm = {
+        eventDoc = {
             title: "CSE 110 Meetings but on east coast",
             details: "Lmao",
             zip: "10001",
             skills: ["Programming", "Engineering"],
-            date: Date.now()
+            date: Date.now(),
+            owner: "o3"
         };
 
-        await insert("events", eventForm, `event-skills-test-4-${Date.now()}`);
+        await insert("events", eventDoc, `event-skills-test-5-${Date.now()}`);
 
         const testPayload = app.testPayload = {
             "uid": `indi-test-${Date.now()}`,
