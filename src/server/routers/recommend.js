@@ -1,8 +1,11 @@
+const { GeoPoint } = require("@google-cloud/firestore");
+const { isPointWithinRadius, getBoundsOfDistance } = require("geolib");
+
 /** @type {APIEndpointHandler} */
 module.exports = {
-    method: "GET",
-    path: "/organization/recommend",
-    handler: function (req, res) {
+    method: "get",
+    path: "/recommend",
+    handler: async function (req, res) {
         // Design use case 6.1
 
         // /api/organizations/filter?type=organization for organization
