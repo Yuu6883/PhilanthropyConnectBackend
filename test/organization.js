@@ -19,8 +19,7 @@ describe("Basic Organization Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
-            events: ["Sample event"]
+            url: "yuh.org"
         };
         res = app.db.orgs.validate(emptyTitle);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -31,8 +30,7 @@ describe("Basic Organization Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
-            events: ["Sample event"]
+            url: "yuh.org"
         };
         res = app.db.orgs.validate(emptyMission);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -43,8 +41,7 @@ describe("Basic Organization Test", async function() {
             causes: [],
             zip: "92037",
             contact: "",
-            url: "yuh.org",
-            events: ["Sample event"]
+            url: "yuh.org"
         };
         res = app.db.orgs.validate(emptyContact);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -55,8 +52,7 @@ describe("Basic Organization Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "",
-            events: ["Sample event"]
+            url: ""
         };
         res = app.db.orgs.validate(emptyUrl);
         assert(!!(res.error || res.errors), "Expecting error");
@@ -67,8 +63,7 @@ describe("Basic Organization Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
-            events: []
+            url: "yuh.org"
         };
         res = app.db.orgs.validate(validForm);
         assert.ifError(res.error || res.errors);
@@ -92,8 +87,7 @@ describe("Basic Organization Test", async function() {
             causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
-            url: "www.sandiegohabitat.org",
-            events: []
+            url: "www.sandiegohabitat.org"
         };
         let doc = app.db.orgs.formToDocument(validForm);
         doc.id = testID;
@@ -116,8 +110,7 @@ describe("Basic Organization Test", async function() {
             causes: ["Medical"],
             zip: "92122",
             contact: "info@sandiegohabitat.org",
-            url: "www.sandiegohabitat.org",
-            events: ["new event"]
+            url: "www.sandiegohabitat.org"
         };
         doc = app.db.orgs.formToDocument(updatedForm);
         const updated = await app.db.orgs.update(testID, doc);
@@ -151,8 +144,7 @@ describe("Basic Organization Test", async function() {
             causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
-            url: "www.sandiegohabitat.org",
-            events: []
+            url: "www.sandiegohabitat.org"
         };
 
         /** @type {Response} */
@@ -245,8 +237,7 @@ describe("Basic Organization Test", async function() {
             causes: ["Medical"],
             zip: "92122", // zip is updated
             contact: "info@sandiegohabitat.org",
-            url: "www.sandiegohabitat.org",
-            events: []
+            url: "www.sandiegohabitat.org"
         };
 
         // PUT to @me with wrong type of profile (user somehow wants to 

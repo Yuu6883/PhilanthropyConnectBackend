@@ -93,7 +93,7 @@ describe("Basic Search Filter Test", async function() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(validFilters)
         });
-        assert(res.status == 200, "Filter endpoint 200");
+        assert(res.status == 200, `Filter endpoint ${res.status}`);
         let jsonRes = await res.json();
         assert(jsonRes[0].causes[0] == validFilters.causes[0], "Cause should match");
     });
@@ -184,7 +184,7 @@ describe("Basic Search Filter Test", async function() {
         let jsonRes = await res.json();
         assert(jsonRes.length == 2 &&
             jsonRes[0].title == "CSE 110 Meetings" &&
-            jsonRes[1].title == "Protest at Google", "Filters should work");
+            jsonRes[1].title == "Protest at Google", `Filters returned unexpected result: ${JSON.stringify(jsonRes)}`);
 
         /** @type {Response} */
         res = await fetch(`http://localhost:${app.config.port}/api/filter?type=events`, {

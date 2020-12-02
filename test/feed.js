@@ -50,8 +50,7 @@ describe("Feed Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
-            events: []
+            url: "yuh.org"
         };
         await insert("orgs", validOrgform1, orgID1);
 
@@ -62,8 +61,7 @@ describe("Feed Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@branson.org",
-            url: "branson.org",
-            events: []
+            url: "branson.org"
         };
         await insert("orgs", validOrgform2, orgID2);
 
@@ -74,8 +72,7 @@ describe("Feed Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@vivian.org",
-            url: "vivian.org",
-            events: []
+            url: "vivian.org"
         };
         await insert("orgs", validOrgform3, orgID3);
 
@@ -180,8 +177,7 @@ describe("Feed Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@vivian.org",
-            url: "vivian.org",
-            events: []
+            url: "vivian.org"
         };
         await insert("orgs", validOrgform, testPayload.uid);
 

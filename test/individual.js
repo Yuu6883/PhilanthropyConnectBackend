@@ -316,8 +316,7 @@ describe("Basic Individual Test", async function() {
             causes: ["Medical"],
             zip: "92037",
             contact: "info@sandiegohabitat.org",
-            url: "www.sandiegohabitat.org",
-            events: []
+            url: "www.sandiegohabitat.org"
         };
         
         const testUpdatedForm = {

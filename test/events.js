@@ -95,8 +95,7 @@ describe("Basic Events Test", async function() {
             causes: [],
             zip: "92037",
             contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
-            events: []
+            url: "yuh.org"
         };
 
         let orgDoc = app.db.orgs.formToDocument(validOrgform);
