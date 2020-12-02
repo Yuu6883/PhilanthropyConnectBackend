@@ -16,13 +16,21 @@ module.exports = {
         
         // call addFollower
         if (type == "true") {
-            await this.db.inds.follow(indi.id, org.id);
-            await this.db.orgs.addFollower(org.id, indi.id);
-            res.sendStatus(200);
+            if (org.data().followers.includes(indi.id) && indi.data().following.includes(org.id)) {
+                return res.sendStatus(409); // conflict! already followed
+            } else {
+                if (!org.data().followers.includes(indi.id)) await this.db.orgs.addFollower(org.id, indi.id);
+                if (!indi.data().following.includes(org.id)) await this.db.inds.follow(indi.id, org.id);
+                res.sendStatus(200);
+            }
         } else if (type == "false") {
-            await this.db.inds.unfollow(indi.id, org.id);
-            await this.db.orgs.removeFollower(org.id, indi.id);
-            res.sendStatus(200);
+            if (!org.data().followers.includes(indi.id) && !indi.data().following.includes(org.id)) {
+                return res.sendStatus(409); // conflict! already followed
+            } else {
+                if (org.data().followers.includes(indi.id)) await this.db.orgs.removeFollower(org.id, indi.id);
+                if (indi.data().following.includes(org.id)) await this.db.inds.unfollow(indi.id, org.id);
+                res.sendStatus(200);
+            }
         } else return res.sendStatus(400);
     }
 }
