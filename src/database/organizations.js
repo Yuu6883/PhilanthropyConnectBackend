@@ -14,7 +14,7 @@ const schema = Joi.object({
         .required(),
     mission: Joi.string()
         .required(),
-    causes: Joi.array().items(
+    causes: Joi.array().unique().items(
         Joi.string()
             .valid(...validCauses)
     ),
@@ -24,10 +24,7 @@ const schema = Joi.object({
     contact: Joi.string()
         .required(),
     url: Joi.string()
-        .required(),
-    events: Joi.array().items(
-        Joi.string()
-    )
+        .required()
 });
 
 /**

@@ -5,8 +5,6 @@ const { validSkills } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
 
-const validZIPCodes = ZIPCodes.map.keys();
-
 /** @type {Joi.ObjectSchema<OrgEventForm>} */
 const schema = Joi.object({
     title: Joi.string()
@@ -20,7 +18,7 @@ const schema = Joi.object({
     zip: Joi.string()
         .required()
         .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
-    skills: Joi.array().items(
+    skills: Joi.array().unique().items(
         Joi.string()
             .valid(...validSkills)
     ),

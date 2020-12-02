@@ -5,8 +5,6 @@ const { validCauses, validSkills, ageCats } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 const Joi = require("joi");
 
-const validZIPCodes = ZIPCodes.map.keys();
-
 /** @type {Joi.ObjectSchema<IndividualForm>} */
 const schema = Joi.object({
     firstname: Joi.string()
@@ -19,7 +17,7 @@ const schema = Joi.object({
         .min(2)
         .max(40)
         .required(),
-    causes: Joi.array().items(
+    causes: Joi.array().unique().items(
         Joi.string()
             .valid(...validCauses)
             .error(() => new Error("Invalid causes"))
@@ -27,13 +25,13 @@ const schema = Joi.object({
     zip: Joi.string()
         .required()
         .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
-    skills: Joi.array().items(
+    skills: Joi.array().unique().items(
         Joi.string()
             .valid(...validSkills)
     ),
     age: Joi.string() // drop down menu figure out how to do this (10-19, 20-29, etc)
         .valid(...ageCats)
-        .required()
+        // .required()
         .error(() => new Error("Invalid age range"))
 });
 

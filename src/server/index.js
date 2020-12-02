@@ -59,7 +59,6 @@ class Server {
 
                 if (token) {
                     const args = token.split(" ");
-                    console.log(args);
                     if (args[0] == "Bearer") {
                         this.auth.verifyIdToken(args[1]).then(decoded => {
                             req.payload = decoded;

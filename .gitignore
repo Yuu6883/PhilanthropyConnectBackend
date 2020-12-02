@@ -1,6 +1,9 @@
 # Config
 *-config.json
 
+# Public folder
+public/*
+
 # Logs
 logs
 *.log
