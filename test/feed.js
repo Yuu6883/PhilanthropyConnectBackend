@@ -158,7 +158,7 @@ describe("Feed Test", async function() {
 
         assert(res.status == 200, "Feed endpoint 200");
         let jsonRes = await res.json();
-        await assert(jsonRes.length == 3 &&
+        assert(jsonRes.length == 3 &&
             jsonRes[0].title == "Programming Detox" &&
             jsonRes[1].title == "Group Gardening" &&
             jsonRes[2].title == "Spaghetti Frenzy", "Individual's feed should work");
