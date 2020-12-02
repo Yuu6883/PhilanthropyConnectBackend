@@ -1,6 +1,7 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
 const fetch = require("node-fetch");
+const { firestore } = require("firebase-admin");
 
 describe("Feed Test", async function() {
 
@@ -89,7 +90,7 @@ describe("Feed Test", async function() {
         };
         const event1 = await insert("events", eventForm1, eventID1);
         event1.owner = orgID1;
-        await this.db.orgs.addEvent(orgID1, eventID1);
+        await app.db.orgs.addEvent(orgID1, eventID1);
 
         const eventID2 = `event-test-2-${Date.now()}`;
         const eventForm2 = {
@@ -101,7 +102,7 @@ describe("Feed Test", async function() {
         };
         const event2 = await insert("events", eventForm2, eventID2);
         event2.owner = orgID2;
-        await this.db.orgs.addEvent(orgID2, eventID2);
+        await app.db.orgs.addEvent(orgID2, eventID2);
 
         const eventID3 = `event-test-3-${Date.now()}`;
         const eventForm3 = {
@@ -113,7 +114,7 @@ describe("Feed Test", async function() {
         };
         const event3 = await insert("events", eventForm3, eventID3);
         event3.owner = orgID3;
-        await this.db.orgs.addEvent(orgID3, eventID3);
+        await app.db.orgs.addEvent(orgID3, eventID3);
 
         // Insert individual
         const testPayload = app.testPayload = {
@@ -133,20 +134,36 @@ describe("Feed Test", async function() {
         };
         await insert("inds", validIndiform, testPayload.uid);
 
-        // Make individual follow the orgs: call follow.js endpoint
+        // Make individual follow the orgs
         /** @type {Response} */
-        let res = await fetch(`http://localhost:${app.config.port}/api/organization/${testPayload.uid}?follow=true`, {
+        /*let res = await fetch(`http://localhost:${app.config.port}/api/organization/${testPayload.uid}?follow=true`, {
             method: "POST",
+        });
+        */
+        app.db.inds.ref.doc(tempInserted["inds"][0]).update({
+            following: firestore.FieldValue.arrayUnion(orgID1, orgID2, orgID3)
+        });
+
+        app.db.orgs.ref.doc(tempInserted["orgs"][0]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
+        });
+
+        app.db.orgs.ref.doc(tempInserted["orgs"][1]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
+        });
+
+        app.db.orgs.ref.doc(tempInserted["orgs"][2]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
         });
 
         // Test GET request from individual to their event feed
-        res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=individual`, {
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=individual`, {
             method: "GET",
         });
 
         assert(res.status == 200, "Feed endpoint 200");
         let jsonRes = await res.json();
-        assert(jsonRes.length == 3 &&
+        await assert(jsonRes.length == 3 &&
             jsonRes[0].title == "Programming Detox" &&
             jsonRes[1].title == "Group Gardening" &&
             jsonRes[2].title == "Spaghetti Frenzy", "Individual's feed should work");
@@ -184,7 +201,7 @@ describe("Feed Test", async function() {
         };
         const event1 = await insert("events", eventForm1, eventID1);
         event1.owner = testPayload.uid;
-        await this.db.orgs.addEvent(testPayload.uid, eventID1);
+        await app.db.orgs.addEvent(testPayload.uid, eventID1);
 
         const eventID2 = `event-test-2-${Date.now()}`;
         const eventForm2 = {
@@ -196,7 +213,7 @@ describe("Feed Test", async function() {
         };
         const event2 = await insert("events", eventForm2, eventID2);
         event2.owner = testPayload.uid;
-        await this.db.orgs.addEvent(testPayload.uid, eventID2);
+        await app.db.orgs.addEvent(testPayload.uid, eventID2);
 
         const eventID3 = `event-test-3-${Date.now()}`;
         const eventForm3 = {
@@ -208,7 +225,7 @@ describe("Feed Test", async function() {
         };
         const event3 = await insert("events", eventForm3, eventID3);
         event3.owner = testPayload.uid;
-        await this.db.orgs.addEvent(testPayload.uid, eventID3);
+        await app.db.orgs.addEvent(testPayload.uid, eventID3);
 
         // Test GET request from organization to their feed
         /** @type {Response} */
@@ -223,5 +240,4 @@ describe("Feed Test", async function() {
             jsonRes[1].title == "Refactoring Spaghetti Code" &&
             jsonRes[2].title == "Spaghetti Frenzy", "Org's feed should work");
     });
-
 });
