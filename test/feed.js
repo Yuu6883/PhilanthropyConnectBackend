@@ -1,6 +1,7 @@
 const assert = require("assert");
 const runner = require("./setup/runner");
 const fetch = require("node-fetch");
+const { firestore } = require("firebase-admin");
 
 describe("Feed Test", async function() {
 
@@ -41,7 +42,8 @@ describe("Feed Test", async function() {
     
     it("Individual Feed Test", async() => {
 
-        // Insert 3 orgs: damn bruh this aint sustainable
+        // Insert 3 orgs
+        const orgID1 = `test-org-1-${Date.now()}`;
         const validOrgform1 = {
             title: "Yuh",
             mission: "Fixing broken programmers",
@@ -51,8 +53,9 @@ describe("Feed Test", async function() {
             url: "yuh.org",
             events: []
         };
-        await insert("orgs", validOrgform1, `test-org-1-${Date.now()}`);
+        await insert("orgs", validOrgform1, orgID1);
 
+        const orgID2 = `test-org-2-${Date.now()}`;
         const validOrgform2 = {
             title: "Branson Foundation",
             mission: "Spreading the love for green",
@@ -62,8 +65,9 @@ describe("Feed Test", async function() {
             url: "branson.org",
             events: []
         };
-        await insert("orgs", validOrgform2, `test-org-2-${Date.now()}`);
+        await insert("orgs", validOrgform2, orgID2);
 
+        const orgID3 = `test-org-3-${Date.now()}`;
         const validOrgform3 = {
             title: "Vivian Foundation",
             mission: "Giving spaghetti to all people with spaghetti code",
@@ -73,14 +77,53 @@ describe("Feed Test", async function() {
             url: "vivian.org",
             events: []
         };
-        await insert("orgs", validOrgform3, `test-org-3-${Date.now()}`);
+        await insert("orgs", validOrgform3, orgID3);
 
-        // TODO: Insert 1 event each
+        // Insert 1 event to each org
+        const eventID1 = `event-test-1-${Date.now()}`;
+        const eventForm1 = {
+            title: "Programming Detox",
+            details: "Help programming destress and heal",
+            zip: "92037",
+            skills: ["Medical Skills"],
+            date: Date.now()
+        };
+        const event1 = await insert("events", eventForm1, eventID1);
+        event1.owner = orgID1;
+        await app.db.orgs.addEvent(orgID1, eventID1);
 
-        // TODO: Add events to orgs
+        const eventID2 = `event-test-2-${Date.now()}`;
+        const eventForm2 = {
+            title: "Group Gardening",
+            details: "Plant native vegetables in the local community garden!",
+            zip: "92037",
+            skills: ["Caretaking"],
+            date: Date.now()
+        };
+        const event2 = await insert("events", eventForm2, eventID2);
+        event2.owner = orgID2;
+        await app.db.orgs.addEvent(orgID2, eventID2);
 
+        const eventID3 = `event-test-3-${Date.now()}`;
+        const eventForm3 = {
+            title: "Spaghetti Frenzy",
+            details: "Help prepare bulk spaghetti!",
+            zip: "92037",
+            skills: ["Cooking"],
+            date: Date.now()
+        };
+        const event3 = await insert("events", eventForm3, eventID3);
+        event3.owner = orgID3;
+        await app.db.orgs.addEvent(orgID3, eventID3);
 
         // Insert individual
+        const testPayload = app.testPayload = {
+            "uid": `indi-test-${Date.now()}`,
+            "name": "Branson Beihl",
+            "picture": "",
+            "email": "example@ucsd.edu",
+            "emailVerified": true
+        };
         const validIndiform = {
             firstname: "Branson",
             lastname: "Beihl",
@@ -89,29 +132,107 @@ describe("Feed Test", async function() {
             skills: ["exampleSkill"],
             age: "20-29"
         };
-        await insert("inds", validIndiform, `test-indi-${Date.now()}`);
+        await insert("inds", validIndiform, testPayload.uid);
 
-        // TODO: Make individual follow the orgs
+        // Make individual follow the orgs
+        app.db.inds.ref.doc(tempInserted["inds"][0]).update({
+            following: firestore.FieldValue.arrayUnion(orgID1, orgID2, orgID3)
+        });
 
-        // TODO: Test GET request from individual to their feed
+        app.db.orgs.ref.doc(tempInserted["orgs"][0]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
+        });
+
+        app.db.orgs.ref.doc(tempInserted["orgs"][1]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
+        });
+
+        app.db.orgs.ref.doc(tempInserted["orgs"][2]).update({
+            followers: firestore.FieldValue.arrayUnion(testPayload.uid)
+        });
+
+        // Test GET request from individual to their event feed
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=individual`, {
+            method: "GET",
+        });
+
+        assert(res.status == 200, "Feed endpoint 200");
+        let jsonRes = await res.json();
+        assert(jsonRes.length == 3 &&
+            jsonRes[0].title == "Programming Detox" &&
+            jsonRes[1].title == "Group Gardening" &&
+            jsonRes[2].title == "Spaghetti Frenzy", "Individual's feed should work");
     });
 
     it("Org Feed Test", async() => {
 
         // Insert org
+        const testPayload = app.testPayload = {
+            "uid": `test-org-${Date.now()}`,
+            "name": "Vivian Chiong",
+            "picture": "",
+            "email": "example@ucsd.edu",
+            "emailVerified": true
+        };
         const validOrgform = {
-            title: "Yuh",
-            mission: "Fixing broken programmers",
+            title: "Vivian Foundation",
+            mission: "Giving spaghetti to all people with spaghetti code",
             causes: [],
             zip: "92037",
-            contact: "testemail@brokenprogrammers.org",
-            url: "yuh.org",
+            contact: "testemail@vivian.org",
+            url: "vivian.org",
             events: []
         };
-        await insert("orgs", validOrgform, `test-org-${Date.now()}`);
-        // TODO: Insert 1 event each
+        await insert("orgs", validOrgform, testPayload.uid);
 
-        // TODO: Test GET request from organization to their feed
+        // Insert 3 events
+        const eventID1 = `event-test-1-${Date.now()}`;
+        const eventForm1 = {
+            title: "Spaghetti Photoshoot",
+            details: "Help take aesthetic pictures of spaghetti for our website!",
+            zip: "92037",
+            skills: ["Photography", "Multimedia"],
+            date: Date.now()
+        };
+        const event1 = await insert("events", eventForm1, eventID1);
+        event1.owner = testPayload.uid;
+        await app.db.orgs.addEvent(testPayload.uid, eventID1);
+
+        const eventID2 = `event-test-2-${Date.now()}`;
+        const eventForm2 = {
+            title: "Refactoring Spaghetti Code",
+            details: "Help junior developers fix their spaghetti code!",
+            zip: "92037",
+            skills: ["Programming", "Teaching/Tutoring"],
+            date: Date.now()
+        };
+        const event2 = await insert("events", eventForm2, eventID2);
+        event2.owner = testPayload.uid;
+        await app.db.orgs.addEvent(testPayload.uid, eventID2);
+
+        const eventID3 = `event-test-3-${Date.now()}`;
+        const eventForm3 = {
+            title: "Spaghetti Frenzy",
+            details: "Help prepare bulk spaghetti!",
+            zip: "92037",
+            skills: ["Cooking"],
+            date: Date.now()
+        };
+        const event3 = await insert("events", eventForm3, eventID3);
+        event3.owner = testPayload.uid;
+        await app.db.orgs.addEvent(testPayload.uid, eventID3);
+
+        // Test GET request from organization to their feed
+        /** @type {Response} */
+        let res = await fetch(`http://localhost:${app.config.port}/api/organization/feed?type=organization`, {
+            method: "GET",
+        });
+
+        assert(res.status == 200, "Feed endpoint 200");
+        let jsonRes = await res.json();
+        assert(jsonRes.length == 3 &&
+            jsonRes[0].title == "Spaghetti Photoshoot" &&
+            jsonRes[1].title == "Refactoring Spaghetti Code" &&
+            jsonRes[2].title == "Spaghetti Frenzy", "Org's feed should work");
     });
-
 });

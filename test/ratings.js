@@ -126,6 +126,9 @@ describe("Basic Ratings Test", async function() {
         
         const data = (await app.db.ratings.byID(ratingID)).data();
         assert(data.owner == testIndiID, "Owner of rating and test individual ID should match");
+
+        let updatedDoc = (await app.db.orgs.byID(testOrgID)).data();
+        assert(updatedDoc.ratings.length == 1, "Org's rating array should be populated");
         
         // Test 404
         res = await fetch(`http://localhost:${app.config.port}/api/organization/rate/nonExistingOrg`, {

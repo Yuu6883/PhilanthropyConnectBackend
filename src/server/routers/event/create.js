@@ -17,6 +17,14 @@ module.exports = {
         docToInsert.owner = req.payload.uid;
         const ref = await this.db.events.insert(docToInsert);
 
-        res.send({ success: true, id: ref.id });
+        // try to add event to org, if it exists
+        try {
+            await this.db.orgs.addEvent(req.payload.uid, ref.id);
+            res.send({ success: true, id: ref.id });
+        } catch (e) {
+            // Remove the event if we failed to add it to some org document
+            await ref.delete().catch(() => {});
+            res.sendStatus(404);
+        }
     }
 }
