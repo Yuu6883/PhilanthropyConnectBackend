@@ -2,7 +2,7 @@
 module.exports = {
     method: "post",
     path: "/organization/:id",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 5.2
         // /organizations/id?follow=[true/false]
         const type = req.query.follow;
@@ -25,7 +25,7 @@ module.exports = {
             }
         } else if (type == "false") {
             if (!org.data().followers.includes(indi.id) && !indi.data().following.includes(org.id)) {
-                return res.sendStatus(409); // conflict! already followed
+                return res.sendStatus(409); // conflict! already unfollowed
             } else {
                 if (org.data().followers.includes(indi.id)) await this.db.orgs.removeFollower(org.id, indi.id);
                 if (indi.data().following.includes(org.id)) await this.db.inds.unfollow(indi.id, org.id);
