@@ -329,30 +329,27 @@ describe("Basic Organization Test", async function() {
         assert(res.status == 200, `Following an unfollowed org should return 200. (status: ${res.status})`);
         let orgDoc = await app.db.orgs.byID(orgID);
         let indDoc = await app.db.inds.byID(ind1ID);
-        let orgRef = orgDoc.data();
-        let indRef = indDoc.data();
-        assert(orgRef.followers.includes(ind1ID), `Individual 1 should be in Org's followers.`);
-        assert(!orgRef.followers.includes(ind2ID), `Individual 2 shouldn't be in Org's followers.`)
-        assert(indRef.following.includes(orgID), `Org should be in Individual 1's followings.`);
+        assert(orgDoc.data().followers.includes(ind1ID), `Individual 1 should be in Org's followers.`);
+        assert(!orgDoc.data().followers.includes(ind2ID), `Individual 2 shouldn't be in Org's followers.`)
+        assert(indDoc.data().following.includes(orgID), `Org should be in Individual 1's followings.`);
         
-        // calling the follow=true when not following an Org
+        // calling the follow=true when already following an Org
         res = await fetch(`http://localhost:${app.config.port}/api/organization/${orgID}?follow=true`, {
             method: "POST",
         });
         assert(res.status == 409, `Following an already followed org should return 409. (status: ${res.status})`)
 
-        // calling the follow=true when not following an Org
+        // calling the follow=false when following an Org
         res = await fetch(`http://localhost:${app.config.port}/api/organization/${orgID}?follow=false`, {
             method: "POST",
         });
         assert(res.status == 200, `Unfollowing an followed org should return 200. (status: ${res.status})`);
         orgDoc = await app.db.orgs.byID(orgID);
         indDoc = await app.db.inds.byID(ind1ID);
-        orgRef = orgDoc.data();
-        indRef = indDoc.data();
-        assert(!orgRef.followers.includes(ind1ID), `Individual 1 shouldn't be in Org's followers.`);
-        assert(!orgRef.followers.includes(ind2ID), `Individual 2 shouldn't be in Org's followers.`)
-        assert(!indRef.following.includes(orgID), `Org shouldn't be in Individual 1's followings.`);
+
+        assert(!orgDoc.data().followers.includes(ind1ID), `Individual 1 shouldn't be in Org's followers.`);
+        assert(!orgDoc.data().followers.includes(ind2ID), `Individual 2 shouldn't be in Org's followers.`)
+        assert(!indDoc.data().following.includes(orgID), `Org shouldn't be in Individual 1's followings.`);
 
         await app.db.inds.delete(ind1ID);
         await app.db.inds.delete(ind2ID);
