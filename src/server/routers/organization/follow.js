@@ -2,7 +2,7 @@
 module.exports = {
     method: "post",
     path: "/organization/:id",
-    handler: function (req, res) {
+    handler: async function (req, res) {
         // Design use case 5.2
         // /organizations/id?follow=[true/false]
         const type = req.query.follow;

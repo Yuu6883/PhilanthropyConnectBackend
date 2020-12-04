@@ -8,15 +8,22 @@ module.exports = {
         const type = req.query.type;
 
         if (await this.db.existsProfile(req.payload.uid)) {
-            return res.status(400).send({ error: "Profile already exists with the associated account" });
+            this.logger.debug("Profile already exists with the associated account");
+            return res.sendStatus(400);
         }
 
         const db = { "individual": this.db.inds, "organization": this.db.orgs }[type];
         
-        if (!db) return res.status(400).send({ error: `Unknown type: ${type}` });
+        if (!db) {
+            this.logger.debug(`Unknown type: ${type}`);
+            return res.sendStatus(400);
+        }
 
         const validatedForm = db.schema.validate(req.body);
-        if (validatedForm.error || validatedForm.errors) return res.status(400).send((validatedForm.error || validatedForm.errors).message);
+        if (validatedForm.error || validatedForm.errors) {
+            this.logger.debug((validatedForm.error || validatedForm.errors).message);
+            return res.sendStatus(400);
+        }
         
         let doc = db.formToDocument(validatedForm.value);
         

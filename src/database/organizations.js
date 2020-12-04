@@ -6,8 +6,6 @@ const firestore = require("@google-cloud/firestore");
 const { validCauses } = require("../constants");
 const { GeoPoint } = require("@google-cloud/firestore");
 
-const validZIP = ZIPCodes.map.keys();
-
 /** @type {Joi.ObjectSchema<OrganizationForm>} */
 const schema = Joi.object({
     title: Joi.string()
@@ -20,7 +18,7 @@ const schema = Joi.object({
     ),
     zip: Joi.string()
         .required()
-        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
+        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.message("Invalid ZIP code")),
     contact: Joi.string()
         .required(),
     url: Joi.string()

@@ -25,7 +25,7 @@ const schema = Joi.object({
     ),
     zip: Joi.string()
         .required()
-        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.error("Invalid ZIP code")),
+        .custom((value, helpers) => ZIPCodes.map.has(value) ? value : helpers.message("Invalid ZIP code")),
     skills: Joi.array().unique().items(
         Joi.string()
             .valid(...validSkills)
