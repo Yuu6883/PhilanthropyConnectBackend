@@ -25,12 +25,14 @@ class Server {
         this.loadAPIRouter();
 
         this.app = express()
-            .disable("x-powered-by");
-        
+            .disable("x-powered-by")
+            .use("/api", this.api);
+            
         if (config.web) {
-            this.app.use(express.static(path.resolve(__dirname, "..", "..", "public")));
+            this.app
+                .use(express.static(path.resolve(__dirname, "..", "..", "public")))
+                .get("*", (_, res) => res.sendFile(path.resolve(__dirname, "..", "..", "public", "index.html")));
         }
-        this.app.use("/api", this.api);
 
         const certFile = path.resolve(__dirname, "..", "..", "cli", "admin-config.json");
         if (!fs.existsSync(certFile)) {

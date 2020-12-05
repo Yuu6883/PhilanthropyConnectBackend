@@ -11,7 +11,7 @@ module.exports = {
         if (data.owner != req.payload.uid) return res.sendStatus(401);
 
         // validate event form
-        const validatedForm = this.db.events.schema.validate(req.body);
+        const validatedForm = this.db.events.validate(req.body);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
         
         // insert event document into database

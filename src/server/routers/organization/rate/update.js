@@ -20,7 +20,7 @@ module.exports = {
         if (data.owner != req.payload.uid) return res.sendStatus(401);
 
         // validate rating form
-        const validatedForm = this.db.ratings.schema.validate(req.body);
+        const validatedForm = this.db.ratings.validate(req.body);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
 
         const docToUpdate = this.db.ratings.formToDocument(validatedForm.value);

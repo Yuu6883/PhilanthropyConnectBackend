@@ -14,8 +14,11 @@ module.exports = {
         
         if (!db) return res.sendStatus(400);
 
-        const validatedForm = db.schema.validate(req.body);
-        if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+        const validatedForm = db.validate(req.body);
+        if (validatedForm.error || validatedForm.errors) {
+            this.logger.debug(validatedForm.error || validatedForm.errors);
+            return res.sendStatus(400);
+        }
         
         let doc = db.formToDocument(validatedForm.value);
         

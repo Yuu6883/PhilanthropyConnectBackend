@@ -19,7 +19,7 @@ module.exports = {
             return res.sendStatus(400);
         }
 
-        const validatedForm = db.schema.validate(req.body);
+        const validatedForm = db.validate(req.body);
         if (validatedForm.error || validatedForm.errors) {
             this.logger.debug((validatedForm.error || validatedForm.errors).message);
             return res.sendStatus(400);

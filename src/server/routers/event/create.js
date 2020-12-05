@@ -9,7 +9,7 @@ module.exports = {
         if (!orgDoc.exists) return res.sendStatus(403);
 
         // validate event form
-        const validatedForm = this.db.events.schema.validate(req.body);
+        const validatedForm = this.db.events.validate(req.body);
         if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
         
         // insert event document into database

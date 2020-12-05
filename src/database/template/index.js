@@ -27,7 +27,7 @@ class Template {
      * @param {F} form
      * @returns {Joi.ValidationResult} document validated
      */
-    validate(form) { return this.schema.validate(form); }
+    validate(form) { return this.schema.validate(form, { stripUnknown: true }); }
 
     /** @param {string} id */
     byID(id) {
