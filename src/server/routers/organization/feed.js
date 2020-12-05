@@ -1,6 +1,3 @@
-const Individual = require("../../../database/individuals");
-const Organizations = require("../../../database/organizations");
-
 /** @type {APIEndpointHandler} */
 module.exports = {
     method: "get",
