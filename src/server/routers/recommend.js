@@ -1,7 +1,5 @@
 const { GeoPoint } = require("@google-cloud/firestore");
 const { isPointWithinRadius, getBoundsOfDistance } = require("geolib");
-const follow = require("./organization/follow");
-
 
 /**
  * @param {[]} arr1

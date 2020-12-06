@@ -20,9 +20,11 @@ const app = new Server(config);
 
 require("./handler")(app);
 
-after(async () => {
-    await app.stop();
-});
+// if (after) {
+//     after(async () => {
+//         await app.stop();
+//     });    
+// }
 
 module.exports = async () => { 
     await app.start();

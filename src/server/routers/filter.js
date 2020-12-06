@@ -66,6 +66,7 @@ module.exports = {
             .map(snapshot => {
                 /** @type {OrgEventDocument|OrganizationDocument} */
                 const doc = snapshot.data();
+                doc.id = snapshot.id;
                 // console.log(`doc[${matchField}] = ${doc[matchField]}, filters[${matchField}] = ${filters[matchField]}`);
                 return {
                     matches: arrayIntersection(doc[matchField], filters[matchField]), 

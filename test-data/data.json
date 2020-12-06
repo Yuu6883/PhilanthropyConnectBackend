@@ -1,0 +1,405 @@
+{
+    "INDI": [
+        {
+            "firstname": "CSE",
+            "lastname": "CSE",
+            "causes": [
+                "Education",
+                "Human & Civil Rights"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Art skills",
+                "Medical Skills"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Gary",
+            "lastname": "Gillespie",
+            "causes": [
+                "Education"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Programming",
+                "Teaching/Tutoring"
+            ],
+            "age": "31-54"
+        },
+        {
+            "firstname": "Kuro",
+            "lastname": "Issugi",
+            "causes": [
+                "Medical",
+                "Animals",
+                "Community Development"
+            ],
+            "zip": "37592",
+            "skills": [
+                "Cooking",
+                "Medical Skills",
+                "Caretaking",
+                "Art skills"
+            ],
+            "age": "55+"
+        },
+        {
+            "firstname": "Michelle",
+            "lastname": "Nguyen",
+            "causes": [
+                "Medical",
+                "Education",
+                "Environment",
+                "Animals",
+                "Human & Civil Rights",
+                "Community Development"
+            ],
+            "zip": "37592",
+            "skills": [
+                "Cooking",
+                "Medical Skills",
+                "Multimedia",
+                "Caretaking",
+                "Art skills",
+                "Teaching/Tutoring"
+            ],
+            "age": "31-54"
+        },
+        {
+            "firstname": "Veronica",
+            "lastname": "Chase",
+            "causes": [
+                "Medical",
+                "Food",
+                "Education",
+                "Environment",
+                "Animals",
+                "Human & Civil Rights",
+                "Homelessness",
+                "Community Development",
+                "Religious"
+            ],
+            "zip": "27485",
+            "skills": [
+                "Cooking",
+                "Medical Skills",
+                "Photography",
+                "Multiple Languages/Translation",
+                "Programming",
+                "Engineering",
+                "Multimedia",
+                "Caretaking",
+                "Art skills",
+                "Teaching/Tutoring"
+            ],
+            "age": "13-17"
+        },
+        {
+            "firstname": "Danny",
+            "lastname": "Vo",
+            "causes": [
+                "Medical",
+                "Food",
+                "Education",
+                "Environment",
+                "Animals",
+                "Human & Civil Rights",
+                "Homelessness",
+                "Community Development"
+            ],
+            "zip": "98473",
+            "skills": [
+                "Cooking",
+                "Photography",
+                "Multiple Languages/Translation",
+                "Programming",
+                "Engineering",
+                "Multimedia"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Dorothy",
+            "lastname": "Gale",
+            "causes": [
+                "Food"
+            ],
+            "zip": "66012",
+            "skills": [
+                "Caretaking"
+            ],
+            "age": "13-17"
+        },
+        {
+            "firstname": "Master",
+            "lastname": "Chief",
+            "causes": [
+                "Human & Civil Rights"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Medical Skills"
+            ],
+            "age": "31-54"
+        },
+        {
+            "firstname": "Patrick",
+            "lastname": "Jorgensen",
+            "causes": [
+                "Homelessness"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Teaching/Tutoring"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Patrick",
+            "lastname": "Jorgensen",
+            "causes": [
+                "Homelessness"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Teaching/Tutoring"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Tester",
+            "lastname": "Tester",
+            "causes": [
+                "Medical",
+                "Food",
+                "Education"
+            ],
+            "zip": "92092",
+            "skills": [
+                "Cooking",
+                "Medical Skills"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Son",
+            "lastname": "Goku",
+            "causes": [
+                "Animals"
+            ],
+            "zip": "99502",
+            "skills": [
+                "Art skills"
+            ],
+            "age": "55+"
+        },
+        {
+            "firstname": "Tri",
+            "lastname": "Truong",
+            "causes": [
+                "Education"
+            ],
+            "zip": "92708",
+            "skills": [
+                "Programming",
+                "Caretaking"
+            ],
+            "age": "18-30"
+        },
+        {
+            "firstname": "Unduwap",
+            "lastname": "Kandage",
+            "causes": [
+                "Animals",
+                "Medical"
+            ],
+            "zip": "12345",
+            "skills": [
+                "Teaching/Tutoring"
+            ],
+            "age": "18-30"
+        }
+    ],
+    "ORG": [
+        {
+            "title": "Let's meet!",
+            "mission": "To give young people a chance to make meaningful connections",
+            "causes": [
+                "Community Development",
+                "Education"
+            ],
+            "zip": "50702",
+            "contact": "letsmeet@ucsd.edu",
+            "url": "www.letsmeet.com"
+        },
+        {
+            "title": "Time to eat",
+            "mission": "To provide college students with low-cost, high-quality food",
+            "causes": [
+                "Food"
+            ],
+            "zip": "73545",
+            "contact": "food@ucsd.edu",
+            "url": "https://en.wikipedia.org/wiki/Food"
+        },
+        {
+            "title": "AI4EVERYONE",
+            "mission": "To educate underrepresented groups about AI",
+            "causes": [
+                "Education"
+            ],
+            "zip": "58805",
+            "contact": "ai4everyone@college.edu",
+            "url": "www.ai4everyone.com"
+        },
+        {
+            "title": "Wilderness Scouts",
+            "mission": "Teaching how to survive in the wilderness and other useful life skills.",
+            "causes": [
+                "Education",
+                "Environment",
+                "Community Development"
+            ],
+            "zip": "83829",
+            "contact": "hr@wildscouts.org",
+            "url": "http://wildscouts.org"
+        },
+        {
+            "title": "Nordgard Pet Shelter",
+            "mission": "Finding loving owners for lost pets!",
+            "causes": [
+                "Community Development",
+                "Animals"
+            ],
+            "zip": "49839",
+            "contact": "contact@nordgard.com",
+            "url": "http://nordgard.com"
+        },
+        {
+            "title": "Cherry Food Shelter",
+            "mission": "Cooking and giving food for the homeless and low budget householdls.",
+            "causes": [
+                "Homelessness",
+                "Community Development",
+                "Food"
+            ],
+            "zip": "92192",
+            "contact": "cherry@prestal.com",
+            "url": "http://cherryshelter.com"
+        },
+        {
+            "title": "Bathrooms of UCSD",
+            "mission": "Directing people to the closest bathroom in dire need of them.",
+            "causes": [
+                "Community Development"
+            ],
+            "zip": "92192",
+            "contact": "bucsd@finder.org",
+            "url": "https://bathroomsofucsd.tumblr.com"
+        },
+        {
+            "title": "Awareness for Injustice",
+            "mission": "To notify the Publish and World of Injustice",
+            "causes": [
+                "Human & Civil Rights"
+            ],
+            "zip": "77240",
+            "contact": "awareness@awarenessforinjustice.com",
+            "url": "https://www.google.com/search?q=awareness+for+injustice&oq=awareness+for+injustice&aqs=chrome..69i57j0i7i30j0i13i30.13984j0j7&sourceid=chrome&ie=UTF-8"
+        },
+        {
+            "title": "Refreshment for All",
+            "mission": "To Provide Clean Showers for all in Need",
+            "causes": [
+                "Community Development",
+                "Homelessness"
+            ],
+            "zip": "67915",
+            "contact": "refresh@gmail.com",
+            "url": "https://www.google.com/search?sxsrf=ALeKk00bHzjtQPW4u4cjssv2KArFBDJ9jw%3A1606939315959&ei=s_LHX8SAOuvA0PEPrYWx-AU&q=shower+power&oq=shower+power&gs_lcp=CgZwc3ktYWIQAzIFCAAQyQMyAggAMgIIADICCAAyAggAMgIIADICCAAyAggAMgIIADICCAA6BAgAEEc6BAgjECc6BAgAEEM6BQgAEJECOgcIABCxAxBDOgUIABCxAzoICC4QxwEQrwE6BwgAEMkDEEM6CAgAELEDEMkDOgcIABAUEIcCUMzLBljS3gZgxuUGaABwBngAgAGLAYgB-QmSAQM2LjaYAQCgAQGqAQdnd3Mtd2l6yAEIwAEB&sclient=psy-ab&ved=0ahUKEwiEpum4i7DtAhVrIDQIHa1CDF8Q4dUDCA0&uact=5"
+        },
+        {
+            "title": "Out of Abundance We Give",
+            "mission": "Care for Homeless through Educational Programs",
+            "causes": [
+                "Homelessness",
+                "Community Development"
+            ],
+            "zip": "66463",
+            "contact": "abundance@gmail.com",
+            "url": "https://www.google.com/search?q=abundance&sxsrf=ALeKk00pmlwXw3moxPx4aBULojjWe37HMw:1606939159894&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiQ5bPuirDtAhXACTQIHV8vCG4Q_AUoAXoECAwQAw&biw=688&bih=666"
+        },
+        {
+            "title": "Lost Cup in House Service",
+            "mission": "Find those Lost Cups",
+            "causes": [
+                "Environment"
+            ],
+            "zip": "42832",
+            "contact": "whereAreAllTheCups@gmail.com",
+            "url": "https://www.reddit.com/r/starbucks/comments/9eyrlj/to_all_my_fellow_mug_collectors/"
+        },
+        {
+            "title": "School4All",
+            "mission": "Making sure every chils has access to free education.",
+            "causes": [
+                "Education",
+                "Human & Civil Rights"
+            ],
+            "zip": "12345",
+            "contact": "school4all@gmail.com",
+            "url": "www.school4all.org"
+        }
+    ],
+    "EVENT": [
+        {
+            "title": "Tips on Volunteering 📚🍽📸📏🎗🎞",
+            "details": "Getting started? Come by to get the skills you need to volunteer for any cause! 📚🍽📸📏🎗🎞",
+            "zip": "50351",
+            "skills": [
+                "Cooking",
+                "Medical Skills",
+                "Caretaking",
+                "Photography",
+                "Multiple Languages/Translation",
+                "Art skills",
+                "Programming",
+                "Engineering",
+                "Multimedia",
+                "Teaching/Tutoring"
+            ],
+            "date": "Sun Dec 05 2021 00:00:00 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+            "title": "Elderly Care and Health",
+            "details": "Is it unclear how you can contribute to caretaking? Join us for a session for how you can effectively volunteer for the elderly!",
+            "zip": "67825",
+            "skills": [
+                "Caretaking",
+                "Multimedia"
+            ],
+            "date": "Mon Sep 20 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "🍴 Food Drive for the Homeless 🍴",
+            "details": "Give canned food 🍖 or help cook 👨‍🍳 for the homeless!",
+            "zip": "41336",
+            "skills": [
+                "Cooking"
+            ],
+            "date": "Fri Nov 26 2021 00:00:00 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+            "title": "3D Printing Masks",
+            "details": "Help contribute to COVID-19 efforts by printing masks!",
+            "zip": "84739",
+            "skills": [
+                "Engineering",
+                "Medical Skills"
+            ],
+            "date": "Mon Sep 06 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        }
+    ],
+    "RATING": []
+}

@@ -52,6 +52,7 @@ class Organizations extends Template {
         doc.picture = "";
         doc.ratings = doc.ratings || [];
         doc.followers = doc.followers || [];
+        doc.events = doc.events || [];
         
         const point = ZIPCodes.map.get(doc.zip);
         doc.location = new GeoPoint(...point);
