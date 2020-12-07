@@ -25,6 +25,11 @@ module.exports = {
         doc.email = req.payload.email || "";
         doc.picture = req.payload.picture || "";
 
+        delete doc.ratings;
+        delete doc.events;
+        delete doc.followers;
+        delete doc.following;
+
         try {
             await db.update(req.payload.uid, doc);
             return res.sendStatus(200);
