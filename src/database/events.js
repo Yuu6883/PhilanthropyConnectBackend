@@ -22,7 +22,9 @@ const schema = Joi.object({
         Joi.string()
             .valid(...validSkills)
     ),
-    date: Joi.date().timestamp()
+    date: Joi.date()
+        .raw()
+        .timestamp()
         .required()
 });
 

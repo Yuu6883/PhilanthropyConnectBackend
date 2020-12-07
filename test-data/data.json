@@ -354,6 +354,120 @@
     ],
     "EVENT": [
         {
+            "title": "Cup cleanup",
+            "details": "Clean up the cups so that there's enough for everyone!",
+            "zip": "95021",
+            "skills": [
+                "Caretaking"
+            ],
+            "date": "Fri Apr 09 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "Beach cleanup",
+            "details": "Clean up the trash on the beach",
+            "zip": "92029",
+            "skills": [
+                "Caretaking"
+            ],
+            "date": "Mon Jun 14 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "AI Education",
+            "details": "Hold workshops to educate undereducated",
+            "zip": "92683",
+            "skills": [
+                "Programming",
+                "Engineering"
+            ],
+            "date": "Wed Mar 10 2021 00:00:00 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+            "title": "English Education",
+            "details": "Hold workshops to teach conversational English",
+            "zip": "92920",
+            "skills": [
+                "Multiple Languages/Translation",
+                "Teaching/Tutoring"
+            ],
+            "date": "Sun Dec 26 2021 00:00:00 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+            "title": "Productivity Workshop",
+            "details": "Hold a class on productivity",
+            "zip": "98765",
+            "skills": [
+                "Cooking",
+                "Medical Skills",
+                "Caretaking",
+                "Photography",
+                "Multiple Languages/Translation",
+                "Art skills",
+                "Programming",
+                "Engineering",
+                "Multimedia",
+                "Teaching/Tutoring"
+            ],
+            "date": "Fri Sep 10 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "Meeting new people!",
+            "details": "Hold a workshop on how to meet people and create meaningful connections",
+            "zip": "92708",
+            "skills": [
+                "Photography",
+                "Multimedia"
+            ],
+            "date": "Mon Jul 26 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "Trash Pickup",
+            "details": "Improve the quality of living in your community by cleaning up.",
+            "zip": "88888",
+            "skills": [
+                "Caretaking"
+            ],
+            "date": "Fri Dec 17 2021 00:00:00 GMT-0800 (Pacific Standard Time)"
+        },
+        {
+            "title": "Let's eat event",
+            "details": "Hold an event where people come to eat food and casually hang out",
+            "zip": "92092",
+            "skills": [
+                "Cooking",
+                "Photography"
+            ],
+            "date": "Sat May 29 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "Carolling in Quaranteen",
+            "details": "Sing Christmas Carols to Random Zoom rooms to lighten up moods!",
+            "zip": "77777",
+            "skills": [
+                "Multimedia",
+                "Art skills"
+            ],
+            "date": "Tue Aug 10 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "Carolling in Quaranteen",
+            "details": "Sing Christmas Carols to Random Zoom rooms to lighten up moods!",
+            "zip": "77777",
+            "skills": [
+                "Multimedia"
+            ],
+            "date": "Wed Apr 14 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
+            "title": "11 people come up with events",
+            "details": "Come up with events!",
+            "zip": "11111",
+            "skills": [
+                "Engineering",
+                "Programming"
+            ],
+            "date": "Wed Jun 30 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
+        },
+        {
             "title": "Tips on Volunteering 📚🍽📸📏🎗🎞",
             "details": "Getting started? Come by to get the skills you need to volunteer for any cause! 📚🍽📸📏🎗🎞",
             "zip": "50351",
@@ -401,5 +515,82 @@
             "date": "Mon Sep 06 2021 00:00:00 GMT-0700 (Pacific Daylight Time)"
         }
     ],
-    "RATING": []
+    "RATING": [
+        {
+            "stars": "3",
+            "description": "This organization has a good heart but not many people helped out so it was difficult"
+        },
+        {
+            "stars": "5",
+            "description": "This was amazing the people are great and it was really organized"
+        },
+        {
+            "stars": "1",
+            "description": "No one showed up to the event I attended"
+        },
+        {
+            "stars": "2",
+            "description": "Didn't respond to my email after two weeks"
+        },
+        {
+            "stars": "5",
+            "description": "This organization has leadership that care and wants to continually improve"
+        },
+        {
+            "stars": "4",
+            "description": "I made great relationship and volunteered for leadership"
+        },
+        {
+            "stars": "3",
+            "description": "This organization has great time accomidations and monetary support from communities around the world"
+        },
+        {
+            "stars": "2",
+            "description": "I thought this organization needs to improve with their organization"
+        },
+        {
+            "stars": "5",
+            "description": "This organization helped me learn about philanthropy and has given me purpose to live and serve others."
+        },
+        {
+            "stars": "5",
+            "description": "My life has been greatly improved through witnessing first hand volunteer work."
+        },
+        {
+            "stars": "3",
+            "description": "Nice events but everyone in this org seems kinda dead."
+        },
+        {
+            "stars": "1",
+            "description": "Terrible organization! Such a waste of my time!"
+        },
+        {
+            "stars": "3",
+            "description": "Decent events, but quite unorganized!"
+        },
+        {
+            "stars": "5",
+            "description": "Awesome organization! Everyone is super nice, and their events  greatly support their causes."
+        },
+        {
+            "stars": "4",
+            "description": "People were unfriendly, and events were boring."
+        },
+        {
+            "stars": "4",
+            "description": "They have really fun events, but I don't see how their events support their causes."
+        },
+        {
+            "stars": "3",
+            "description": "The people were friendly, but their events were unorganized."
+        },
+        {
+            "stars": "4",
+            "description": "Great organization but room for improvement"
+        },
+        {
+            "stars": "5",
+            "description": "This is a great organization! I had a great time volunteering with them!"
+        }
+    ]
 }

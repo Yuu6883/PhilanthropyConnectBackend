@@ -1,8 +1,7 @@
-const runner = require("./test/setup/runner");
+const runner = require("../test/setup/runner");
 const data = require("./data.json");
 
 const pick = array => array[~~(Math.random() * array.length)];
-
 
 runner().then(async app => {
 
@@ -45,4 +44,18 @@ runner().then(async app => {
             await follow(i, pick(orgIDS));
         }
     }
+
+    for (const rating of data.RATING) {
+        rating.stars = ~~rating.stars;
+        const result = app.db.ratings.validate(rating);
+        if (result.error || result.errors) console.log((result.error || result.errors).message);
+        const doc = app.db.ratings.formToDocument(result.value);
+        const ind = pick(indIDs);
+        const org = pick(orgIDS);
+        doc.owner = ind;
+        const ref = await app.db.ratings.insert(doc);
+        await app.db.orgs.addRating(org, ref.id);
+    };
+
+    await app.stop();
 });

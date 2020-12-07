@@ -10,11 +10,15 @@ module.exports = {
 
         // validate event form
         const validatedForm = this.db.events.validate(req.body);
-        if (validatedForm.error || validatedForm.errors) return res.sendStatus(400);
+        if (validatedForm.error || validatedForm.errors) {
+            this.logger.debug((validatedForm.error || validatedForm.errors).message);
+            return res.sendStatus(400);
+        }
         
         // insert event document into database
         const docToInsert = this.db.events.formToDocument(validatedForm.value);
         docToInsert.owner = req.payload.uid;
+        this.logger.debug("Inserting event doc");
         const ref = await this.db.events.insert(docToInsert);
 
         // try to add event to org, if it exists

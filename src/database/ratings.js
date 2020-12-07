@@ -3,9 +3,7 @@ const Joi = require("joi");
 
 /** @type {Joi.ObjectSchema<RatingForm>} */
 const schema = Joi.object({
-    stars: Joi.number()
-        .min(1)
-        .max(5)
+    stars: Joi.valid(1, 2, 3, 4, 5)
         .required(),
     description: Joi.string()
         .min(2)

@@ -107,7 +107,7 @@ class Server {
         // Redirect lurkers
         this.api.use((req, res) => {
             this.logger.onAccess(`Redirecting lurker from ${req.originalUrl}`);
-            res.redirect("/");
+            res.sendStatus(404);
         });
     }
 
