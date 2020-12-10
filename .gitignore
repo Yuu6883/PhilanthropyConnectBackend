@@ -1,3 +1,6 @@
+# ZIP
+*.zip
+
 # Config
 *-config.json
 
