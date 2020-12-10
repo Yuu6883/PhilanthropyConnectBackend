@@ -53,7 +53,11 @@ module.exports = {
             const orgDoc = org.data();
 
             const events = await Promise.all(orgDoc.events.map(id => this.db.events.byID(id)));
-            res.send(events.map(orgEvent => orgEvent.data()));
+            res.send(events.map(orgEvent => {
+                const data = orgEvent.data();
+                data.id = orgEvent.id;
+                return data;
+            }));
         }
     }
 }
