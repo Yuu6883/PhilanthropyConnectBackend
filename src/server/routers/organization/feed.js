@@ -23,27 +23,40 @@ module.exports = {
 
             // Map the org id's to their document
             const query = await Promise.all(indiDoc.following.map(id => this.db.orgs.byID(id)));
-            const followedOrgs = query.map(org => org.data());
-
             /** @type {OrgEventDocument[]} */
             let allEvents = [];  // all events from followed orgs
             
+            const simplifiedOrgDocs = []
             // For each org, add their events to final allEvents array
-            for (const orgDoc of followedOrgs) {
+            for (const index in query) {
   
-                const events = await Promise.all(orgDoc.events.map(id => this.db.events.byID(id)));
-                const eventDocs  = events.map(org => org.data());
+                const orgDoc = query[index];
+                const events = await Promise.all(orgDoc.data().events.map(id => this.db.events.byID(id)));
+                const eventDocs  = events.map(event => {
+                    const data = event.data();
+                    data.org = index;
+                    return data;
+                });
+                const orgData = orgDoc.data();
+                const simpleOrg = {};
+                simpleOrg.id = orgDoc.id;
+                simpleOrg.title = orgData.title;
+                simpleOrg.picture = orgData.picture;
+                simpleOrg.mission = orgData.mission;
+                simpleOrg.contact = orgData.contact;
+                simplifiedOrgDocs.push(simpleOrg);
                 
                 allEvents = allEvents.concat(eventDocs);
             }
 
             // Sort OrgEventDocuments by date: lowest timestamp first
-            allEvents
+            const events = allEvents
                 .filter(e => e.date > Date.now())
-                .sort((a, b) => a.date - b.date);
+                .sort((a, b) => a.date - b.date)
+                .slice(0, 50);
 
             // Get 50 most recent events from allEvents to send back as response
-            res.send(allEvents.slice(0, 50));
+            res.send({ events, orgs: simplifiedOrgDocs });
 
         // If db is org: send back array of their own events' documents
         } else if (type == "organization") {
