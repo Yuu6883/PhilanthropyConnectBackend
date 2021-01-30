@@ -1,4 +1,4 @@
-# CSE110 Project Backend
+# Backend for PhilanthropyConnect (CSE110 Project)
 
 ## Installation
 Install node.js first if you haven't.
